@@ -1,4 +1,4 @@
-package org.example;
+package com.samuelschwenn;
 /**
  * Unit test for simple App.
  */
