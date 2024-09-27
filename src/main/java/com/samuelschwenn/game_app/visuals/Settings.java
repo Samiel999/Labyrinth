@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import static com.samuelschwenn.Main.loop;
+import static com.samuelschwenn.game_app.util.SoundUtils.*;
 
 public class Settings extends JFrame {
     public static boolean musicMuted = false;

@@ -24,7 +24,6 @@ public abstract class Building extends Objekt {
         this.isBlueprint = false;
     }
 
-
     public void setBlueprint(boolean blueprint){
         this.isBlueprint = blueprint;
     }
