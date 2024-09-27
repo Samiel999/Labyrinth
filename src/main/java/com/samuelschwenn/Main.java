@@ -3,13 +3,13 @@ package com.samuelschwenn;
 // Import necessary packages and classes
 //import org.jetbrains.annotations.NotNull;
 
-import com.samuelschwenn.drawables.objects.buildings.Building;
-import com.samuelschwenn.drawables.objects.monster.Monster;
-import com.samuelschwenn.logic.LogicRepresentation;
-import com.samuelschwenn.logic.UpdateLoop;
-import com.samuelschwenn.sounds.SFX;
-import com.samuelschwenn.sounds.Sound;
-import com.samuelschwenn.util.CoordsInt;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Monster;
+import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.UpdateLoop;
+import com.samuelschwenn.game_app.sounds.SFX;
+import com.samuelschwenn.game_app.sounds.Sound;
+import com.samuelschwenn.game_logic.util.CoordsInt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 
-import static com.samuelschwenn.util.SoundUtils.playSFX;
+import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 
 // Main class
 public class Main {
