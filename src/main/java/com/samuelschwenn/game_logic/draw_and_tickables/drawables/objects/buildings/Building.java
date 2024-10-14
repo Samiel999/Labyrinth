@@ -8,6 +8,7 @@ import com.samuelschwenn.game_logic.util.CoordsInt;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.samuelschwenn.Main.loop;
@@ -18,8 +19,8 @@ public abstract class Building extends Objekt {
     @Getter
     protected double cost;
     protected boolean isBlueprint;
-    public Building(int pStrength, int pHealth, CoordsInt position, ObjectType type, double cost) {
-        super(pStrength, pHealth, position, type);
+    public Building(int pStrength, int pHealth, CoordsInt position, ObjectType type, double cost, Image image) {
+        super(pStrength, pHealth, position, type, image);
         this.cost = cost;
         this.isBlueprint = false;
     }

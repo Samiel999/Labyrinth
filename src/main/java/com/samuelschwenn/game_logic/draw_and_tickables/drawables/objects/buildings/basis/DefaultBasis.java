@@ -22,15 +22,6 @@ public class DefaultBasis extends Basis{
         }
     }
     public DefaultBasis(CoordsInt position) {
-        super(0, 200, position, ObjectType.DefaultBasis);
+        super(0, 200, position, ObjectType.DefaultBasis, image);
     }
-
-    @Override
-    public Image getImage() {
-        return image;
-    }
-
-//    public static Image getStaticImage() {
-//        return image;
-//    }
 }

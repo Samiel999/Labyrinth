@@ -25,19 +25,23 @@ public abstract class Objekt implements Drawable, Serializable {
     @Getter
     protected ObjectType type;
     @Getter
-    protected double spawntime;
+    protected double spawnTime;
 
-    public Objekt(int pStrength, int pHealth, CoordsInt position, ObjectType type) {
+    protected final Image image;
+
+    public Objekt(int pStrength, int pHealth, CoordsInt position, ObjectType type, Image image) {
         strength = pStrength;
         health = pHealth;
         maxHealth = health;
         this.position = position;
         this.type = type;
-        spawntime = (double) System.currentTimeMillis() / 1000;
+        spawnTime = (double) System.currentTimeMillis() / 1000;
+        this.image = image;
         loop.registerDrawable(this);
     }
 
     public Objekt(){
+        image = null;
         loop.registerDrawable(this);
     }
 
@@ -59,8 +63,12 @@ public abstract class Objekt implements Drawable, Serializable {
         CoordsDouble pixelPosition = this.getDrawnPosition().scale(spaceBetweenLinesPixels);
         Graphics2D g2 = (Graphics2D) g;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getOpacity()));
-        g2.drawImage(this.
-                getImage(), (int) pixelPosition.x(), (int) pixelPosition.y() + titleBarSizePixels, null);
+        g2.drawImage(
+                this.getImage(),
+                (int) pixelPosition.x(),
+                (int) pixelPosition.y() + titleBarSizePixels,
+                null
+        );
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         renderLifeBar((Graphics2D) g);
     }
@@ -76,7 +84,9 @@ public abstract class Objekt implements Drawable, Serializable {
         }
     }
 
-    abstract protected Image getImage();
+    protected Image getImage(){
+        return image;
+    }
 
     abstract protected CoordsDouble getDrawnPosition();
 }

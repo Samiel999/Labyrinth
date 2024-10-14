@@ -31,13 +31,14 @@ public class SetupMethods {
         try {
             Class<?> levelToLoad = Class.forName("com.samuelschwenn.level.Level" + currentLevel);
             return (Level) levelToLoad.getDeclaredConstructor(Basis.class).newInstance(loop.getBasis());
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException |
+                 NoSuchMethodException e) {
             System.out.println("Couldn't load class file for level " + currentLevel);
             throw new RuntimeException(e);
         }
     }
 
-    public static JFrame[] setUpGameWindow(){
+    public static JFrame[] setUpGameWindow() {
         JFrame game_frame = new JFrame();
         game_frame.addWindowListener(new WindowAdapter() {
             @Override

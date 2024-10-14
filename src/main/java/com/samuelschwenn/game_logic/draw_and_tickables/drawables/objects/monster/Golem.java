@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.samuelschwenn.game_logic.util.Math.mirrorImage;
+import static com.samuelschwenn.game_app.util.ImageUtil.mirrorImage;
 import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
 
 @NoArgsConstructor

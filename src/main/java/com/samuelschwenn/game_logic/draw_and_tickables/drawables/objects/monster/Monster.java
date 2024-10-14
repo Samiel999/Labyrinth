@@ -20,7 +20,6 @@ import java.util.List;
 import static com.samuelschwenn.Main.loop;
 import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType.DefaultBasis;
 import static com.samuelschwenn.game_logic.util.LoopType.game_over;
-import static com.samuelschwenn.game_logic.util.Math.getDirectionDifference;
 import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 
 @NoArgsConstructor
@@ -77,7 +76,7 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
     }
 
     public void moveTowardsPosition(double timeDelta, LogicRepresentation logicRepresentation) {
-        Direction directionToMove = getDirectionDifference(drawnPosition, position.toCoordsDouble());
+        Direction directionToMove = drawnPosition.getDirectionTo(position.toCoordsDouble());
 
         if (directionToMove == null) {
             makeMove(timeDelta, logicRepresentation);
@@ -87,13 +86,13 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
         CoordsDouble neededShiftage = position.toCoordsDouble().add(drawnPosition.scale(-1));
         CoordsDouble moved = CoordsDouble.getNormalized(directionToMove).scale((float) timeDelta * movingSpeed);
         CoordsDouble leftShiftage = neededShiftage.add(moved.scale(-1));
-        if (CoordsDouble.getNormalized(directionToMove).min(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
-            if (leftShiftage.max(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
+        if (CoordsDouble.getNormalized(directionToMove).minCoords(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
+            if (leftShiftage.maxCoords(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
                 this.drawnPosition = position.toCoordsDouble();
                 return;
             }
         } else {
-            if (leftShiftage.min(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
+            if (leftShiftage.minCoords(new CoordsDouble(0, 0)).equals(new CoordsDouble(0, 0))) {
                 this.drawnPosition = position.toCoordsDouble();
                 return;
             }
@@ -143,7 +142,8 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
     }
 
     public Direction getDirection(){
-        Direction direction = getDirectionDifference((monsterPathNodes.get(1).equals(position) ? position : monsterPathNodes.get(1)).toCoordsDouble(), drawnPosition);
+        CoordsDouble current_position = (monsterPathNodes.get(1).equals(position) ? position : monsterPathNodes.get(1)).toCoordsDouble();
+        Direction direction = current_position.getDirectionTo(drawnPosition);
         if(direction == null){
             monsterPathNodes.remove(1);
             return getDirection();

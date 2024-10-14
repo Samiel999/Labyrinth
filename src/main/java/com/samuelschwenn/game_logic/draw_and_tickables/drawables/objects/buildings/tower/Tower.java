@@ -26,8 +26,8 @@ public abstract class Tower extends Building implements Tickable {
 
     private Monster[] shotMonsters = new Monster[0];
 
-    public Tower(int strength, int health, CoordsInt position, int reach, int speed, double kosten, ObjectType type) {
-        super(strength, health, position, type, kosten);
+    public Tower(int strength, int health, CoordsInt position, int reach, int speed, double kosten, ObjectType type, Image image) {
+        super(strength, health, position, type, kosten, image);
         attackSpeed = speed;
         this.reach = reach;
         loop.registerTickable(this);

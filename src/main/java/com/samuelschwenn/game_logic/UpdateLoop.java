@@ -56,21 +56,33 @@ public class UpdateLoop implements Runnable {
     private boolean music_playing = false;
 
     public void run() {
+        setCurrentLoopToMainMenu();
+        tryToSelectLevelBasedOnSaveFile();
+        main_menu_loop();
+    }
+
+    private void setCurrentLoopToMainMenu() {
         current_loop = main_menu;
+    }
+
+    private void tryToSelectLevelBasedOnSaveFile() {
         try{
             InputStream stream = MainMenu.class.getClassLoader().getResourceAsStream("Save.txt");
             if(stream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                char[] input = new char[6];
-                reader.read(input);
-                if(input[0] == '\u0000') throw new IOException("Invalid save file");
-                String str = String.copyValueOf(input, 0, 5);
-                if(str.equals("Level")) SetupMethods.selectLevel(input[5] - '0');
-                reader.close();
+                processFileData(stream);
             }
         } catch (IOException _) {
         }
-        main_menu_loop();
+    }
+
+    private void processFileData(InputStream stream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        char[] input = new char[6];
+        reader.read(input);
+        if(input[0] == '\u0000') throw new IOException("Invalid save file");
+        String str = String.copyValueOf(input, 0, 5);
+        if(str.equals("Level")) SetupMethods.selectLevel(input[5] - '0');
+        reader.close();
     }
 
     private void main_menu_loop(){

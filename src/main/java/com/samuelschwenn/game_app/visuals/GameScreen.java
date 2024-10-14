@@ -100,7 +100,7 @@ public class GameScreen extends JPanel {
                             int y = (e.getY() - titleBarSizePixels) / spaceBetweenLinesPixels;
 
                             if (logicRepresentation.getBuildings().containsKey(new CoordsInt(x, y))) {
-                                if (logicRepresentation.getBuildings().get(new CoordsInt(x, y)).getSpawntime() + 2 <= System.currentTimeMillis()) {
+                                if (logicRepresentation.getBuildings().get(new CoordsInt(x, y)).getSpawnTime() + 2 <= System.currentTimeMillis()) {
                                     try {
                                         new RemoveBuildingPopUp(x, y, e.getX(), e.getY());
                                     } catch (IOException ignored) {
@@ -247,7 +247,10 @@ public class GameScreen extends JPanel {
     }
 
     private void drawBackground(Graphics g) {
-        if (logicRepresentation.getLevel().getClass().equals(Level1.class) || logicRepresentation.getLevel().getClass().equals(Level2.class) || logicRepresentation.getLevel().getClass().equals(Level3.class) || logicRepresentation.getLevel().getClass().equals(Level4.class)) {
+        if (logicRepresentation.getLevel().getClass().equals(Level1.class) ||
+                logicRepresentation.getLevel().getClass().equals(Level2.class) ||
+                logicRepresentation.getLevel().getClass().equals(Level3.class) ||
+                logicRepresentation.getLevel().getClass().equals(Level4.class)) {
             g.drawImage(
                     backgroundImageLevel3,
                     0,

@@ -27,17 +27,12 @@ public class DefaultTower extends Tower {
     }
 
     public DefaultTower(CoordsInt position) {
-        super(5, 25, position, 4, 6, 20, ObjectType.DefaultTower);
+        super(5, 25, position, 4, 6, 20, ObjectType.DefaultTower, image);
     }
 
     @Override
     public Monster[] shoot(LogicRepresentation logicRepresentation) {
         return new Monster[]{shootNormal(logicRepresentation)};
-    }
-
-    @Override
-    public Image getImage() {
-        return image;
     }
 
     public static Image getStaticImage() {
