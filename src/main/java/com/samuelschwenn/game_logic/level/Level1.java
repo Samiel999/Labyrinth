@@ -27,20 +27,7 @@ public class Level1 extends Level{
         addSpawnArea(new Pair<>(new CoordsInt(0, height - 1), new CoordsInt(width - 1, height - 1)));
         addSpawnArea(new Pair<>(new CoordsInt(0, 0), new CoordsInt(width - 1, 0)));
         addSpawnArea(new Pair<>(new CoordsInt(width - 1, 0), new CoordsInt(width - 1, height - 1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new DefaultMonster(new CoordsInt(-1, -1)));
+
+        addNumberOfMonstersToSpawnList(15, DefaultMonster.class);
     }
 }

@@ -1,7 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.NoArgsConstructor;
@@ -34,13 +33,23 @@ public class Golem extends Monster{
         directionalImages.put(Direction.NORTH, image);
         directionalImages.put(Direction.SOUTH, image);
     }
-    public Golem(CoordsInt position) {
-        super(20, 60, position, 1, 1, 20, ObjectType.Golem, false);
+
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(20);
+        setHealth(60);
+        setPosition(position);
+        setMovingSpeed(1);
+        setAttackSpeed(1);
+        setBounty(20);
+        setFlying(false);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateWalkingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateWalkingMonsterPath();
     }
 
     @Override

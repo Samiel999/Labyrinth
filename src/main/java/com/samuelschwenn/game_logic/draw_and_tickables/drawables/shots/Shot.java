@@ -11,9 +11,9 @@ import static com.samuelschwenn.game_app.visuals.GameScreen.titleBarSizePixels;
 
 public abstract class Shot implements Drawable, Tickable {
     protected double progress;
-    protected double duration;
-    protected CoordsInt startingPositionPixels;
-    protected CoordsInt targetPositionPixels;
+    protected final double duration;
+    protected final CoordsInt startingPositionPixels;
+    protected final CoordsInt targetPositionPixels;
     protected float opacity;
 
     public Shot(double duration, CoordsDouble startingPosition, CoordsDouble targetPosition, float startingOpacity) {

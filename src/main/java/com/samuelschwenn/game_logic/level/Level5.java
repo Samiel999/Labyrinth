@@ -24,16 +24,11 @@ public class Level5 extends Level{
         addSpawnArea(new Pair<>(new CoordsInt(0, height - 1), new CoordsInt(width - 1, height - 1)));
         addSpawnArea(new Pair<>(new CoordsInt(0, 0), new CoordsInt(width - 1, 0)));
         addSpawnArea(new Pair<>(new CoordsInt(width - 1, 0), new CoordsInt(width - 1, height - 1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Runner(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Runner(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Runner(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Runner(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Runner(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Boss1(new CoordsInt(-1, -1)));
+
+        addNumberOfMonstersToSpawnList(4, Lakai.class);
+        addNumberOfMonstersToSpawnList(5, Runner.class);
+        addNumberOfMonstersToSpawnList(1, Boss1.class);
+
         basis.setHealth(basis.getMaxHealth());
         basis.setPosition(new CoordsInt(19, 10));
     }

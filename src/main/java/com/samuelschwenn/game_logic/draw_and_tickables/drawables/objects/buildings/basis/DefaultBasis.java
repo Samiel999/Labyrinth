@@ -1,6 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +21,13 @@ public class DefaultBasis extends Basis{
             throw new RuntimeException(e);
         }
     }
-    public DefaultBasis(CoordsInt position) {
-        super(0, 200, position, ObjectType.DefaultBasis, image);
+
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(0);
+        setHealth(200);
+        setPosition(position);
+        setImage(image);
+        return this;
     }
 }

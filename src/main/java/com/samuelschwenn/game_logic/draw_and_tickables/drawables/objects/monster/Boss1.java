@@ -1,7 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ public class Boss1 extends Monster{
     private static Image image;
     static {
         try {
-            image = ImageIO.read(Objects.requireNonNull(BombCarrier.class.getClassLoader().getResourceAsStream("images/Boss.png")));
+            image = ImageIO.read(Objects.requireNonNull(Boss1.class.getClassLoader().getResourceAsStream("images/Boss.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,13 +33,23 @@ public class Boss1 extends Monster{
         directionalImages.put(Direction.NORTH, image);
         directionalImages.put(Direction.SOUTH, image);
     }
-    public Boss1(CoordsInt position) {
-        super(30, 140, position, 1.5f, 3, 100, ObjectType.Boss1, false);
+
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(30);
+        setHealth(140);
+        setPosition(position);
+        setMovingSpeed(1.5f);
+        setAttackSpeed(3);
+        setBounty(100);
+        setFlying(false);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateWalkingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateWalkingMonsterPath();
     }
 
     

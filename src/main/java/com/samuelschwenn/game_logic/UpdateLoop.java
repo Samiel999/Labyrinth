@@ -17,6 +17,7 @@ import java.io.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject.instantiate;
 import static com.samuelschwenn.game_logic.util.LoopType.game_loop_pending;
 import static com.samuelschwenn.game_logic.util.LoopType.main_menu;
 import static com.samuelschwenn.game_app.util.SoundUtils.playMusic;
@@ -30,9 +31,6 @@ public class UpdateLoop implements Runnable {
     private List<Drawable> drawables = new CopyOnWriteArrayList<>();
     @Getter
     private List<Tickable> tickables = new CopyOnWriteArrayList<>();
-
-    @Getter
-    private LogicRepresentation logic_representation;
 
     private LoopType current_loop;
     //Level Access-Methods
@@ -103,14 +101,14 @@ public class UpdateLoop implements Runnable {
         music_playing = false;
         SetupMethods.selectLevel(current_level);
         if(continue_game){
-            LogicRepresentation lr;
-            try (InputStream inputStream = UpdateLoop.class.getClassLoader().getResourceAsStream("Save.txt");
-                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
-                lr = (LogicRepresentation) objectInputStream.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            logic_representation = lr;
+//            LogicRepresentation lr;
+//            try (InputStream inputStream = UpdateLoop.class.getClassLoader().getResourceAsStream("Save.txt");
+//                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
+//                lr = (LogicRepresentation) objectInputStream.readObject();
+//            } catch (IOException | ClassNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//            logic_representation = lr;
         }else{
             File save_file = new File("Save.txt");
             try{
@@ -161,7 +159,7 @@ public class UpdateLoop implements Runnable {
         paused = true;
         if(current_level == 4){
             current_level = 1;
-        } else if(logic_representation.playerWins()) current_level++;
+        } else if(LogicRepresentation.getInstance().playerWins()) current_level++;
         try (PrintWriter printWriter = new PrintWriter("Save.txt")) {
             printWriter.print("Level" + current_level);
         } catch (FileNotFoundException e) {
@@ -171,7 +169,7 @@ public class UpdateLoop implements Runnable {
 
         stopMusic();
         music_playing = false;
-        if(logic_representation.playerWins()){
+        if(LogicRepresentation.getInstance().playerWins()){
             current_graphic[0] = new WinningScreen(gameOverScreenX, gameOverScreenY);
         }else{
             current_graphic[0] = new LosingScreen(gameOverScreenX, gameOverScreenY);
@@ -188,7 +186,7 @@ public class UpdateLoop implements Runnable {
     private void settings() throws InterruptedException {
         try (FileOutputStream fileOutputStream = new FileOutputStream("Save.txt");
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeObject(logic_representation);
+            objectOutputStream.writeObject(LogicRepresentation.getInstance());
             objectOutputStream.flush();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -270,10 +268,13 @@ public class UpdateLoop implements Runnable {
     }
     public void resetDrawables(){drawables = new CopyOnWriteArrayList<>();}
 
-    public void resetBasis(){basis = new DefaultBasis(new CoordsInt(0,0));}
+    public void resetBasis(){
+        basis = (DefaultBasis) instantiate(DefaultBasis.class, new CoordsInt(0,0));
+    }
 
     //Logic-Representation Access-Methods
     public void resetLogicRepresentation(Level level){
-        logic_representation = new LogicRepresentation(level);
+        LogicRepresentation.resetInstance();
+        LogicRepresentation.getInstance().initializeWithLevel(level);
     }
 }

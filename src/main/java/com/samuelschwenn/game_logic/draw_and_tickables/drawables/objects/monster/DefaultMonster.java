@@ -1,7 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.NoArgsConstructor;
@@ -33,18 +32,25 @@ public class DefaultMonster extends Monster{
         directionalImages.put(Direction.NORTH, image);
         directionalImages.put(Direction.SOUTH, image);
     }
-    public DefaultMonster(CoordsInt position) {
-        super(10, 20, position, 2, 4, 8, ObjectType.Default, false);
+
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(10);
+        setHealth(20);
+        setPosition(position);
+        setMovingSpeed(2);
+        setAttackSpeed(4);
+        setBounty(8);
+        setFlying(false);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateWalkingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateWalkingMonsterPath();
     }
 
-//    public static Image getStaticImage() {
-//        return directionalImages.get(null);
-//    }
     @Override
     public Image getImage() {
         return directionalImages.get(getDirection());

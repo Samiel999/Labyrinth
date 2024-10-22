@@ -1,5 +1,7 @@
 package com.samuelschwenn.game_app.visuals;
 
+import com.samuelschwenn.game_logic.LogicRepresentation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -22,7 +24,7 @@ public class StartGamePopUp extends JFrame {
                         setVisible(false);
                         try (FileOutputStream fileOutputStream = new FileOutputStream("Save.txt");
                              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                            objectOutputStream.writeObject(loop.getLogic_representation());
+                            objectOutputStream.writeObject(LogicRepresentation.getInstance());
                             objectOutputStream.flush();
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);

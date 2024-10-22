@@ -1,7 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.NoArgsConstructor;
@@ -33,13 +32,23 @@ public class Lakai extends Monster{
         directionalImages.put(Direction.NORTH, image);
         directionalImages.put(Direction.SOUTH, image);
     }
-    public Lakai(CoordsInt position){
-        super(10, 20, position, 4, 3, 20, ObjectType.Lakai, true);
+
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(10);
+        setHealth(20);
+        setPosition(position);
+        setMovingSpeed(4);
+        setAttackSpeed(3);
+        setBounty(20);
+        setFlying(true);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateFlyingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateFlyingMonsterPath();
     }
 
     

@@ -3,9 +3,9 @@ package com.samuelschwenn.game_app.visuals;
 // Import of other classes into the project
 
 import com.samuelschwenn.Main;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.Objekt;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.DefaultBasis;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.DefaultTower;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Minigun;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Sniper;
@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import static com.samuelschwenn.Main.loadDesign;
 import static com.samuelschwenn.Main.loop;
+import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject.instantiate;
 
 // Main window which runs the game
 public class GameScreen extends JPanel {
@@ -42,9 +43,6 @@ public class GameScreen extends JPanel {
     // height and width of the opened window in pixels
     private final int windowWidthPixels;
     private final int windowHeightPixels;
-
-    // Connection with the logical implementation of the LogicRepresentation
-    private final LogicRepresentation logicRepresentation;
 
     // boolean that prevents opening the popup multiple times
     public static final boolean[] pressed = {false, false};
@@ -57,11 +55,9 @@ public class GameScreen extends JPanel {
     public static boolean paused = true;
 
     // constructor for class GameScreen
-    public GameScreen(LogicRepresentation logicRepresentation) {
-        this.logicRepresentation = logicRepresentation;
-
-        windowWidthPixels = logicRepresentation.getWidth() * spaceBetweenLinesPixels;
-        windowHeightPixels = logicRepresentation.getHeight() * spaceBetweenLinesPixels + titleBarSizePixels;
+    public GameScreen() {
+        windowWidthPixels = LogicRepresentation.getInstance().getWidth() * spaceBetweenLinesPixels;
+        windowHeightPixels = LogicRepresentation.getInstance().getHeight() * spaceBetweenLinesPixels + titleBarSizePixels;
 
         try {
             backgroundImageLevel3 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("images/BackgroundLevel3.jpg")));
@@ -84,13 +80,13 @@ public class GameScreen extends JPanel {
                                         Main.source = true;
                                         loop.update(LoopType.settings);
                                     } else if (e.getX() >= 630 && e.getX() <= 671) {
-                                        choseBuilding("tower.DefaultTower");
+                                        choseBuilding(DefaultTower.class);
                                     } else if (e.getX() >= 689 && e.getX() <= 730) {
-                                        choseBuilding("tower.Minigun");
+                                        choseBuilding(Minigun.class);
                                     } else if (e.getX() >= 748 && e.getX() <= 789) {
-                                        choseBuilding("tower.Sniper");
+                                        choseBuilding(Sniper.class);
                                     } else if (e.getX() >= 807 && e.getX() <= 848) {
-                                        choseBuilding("wall.DefaultWall");
+                                        choseBuilding(DefaultWall.class);
                                     }
                                 }
                                 return;
@@ -99,8 +95,8 @@ public class GameScreen extends JPanel {
                             int x = e.getX() / spaceBetweenLinesPixels;
                             int y = (e.getY() - titleBarSizePixels) / spaceBetweenLinesPixels;
 
-                            if (logicRepresentation.getBuildings().containsKey(new CoordsInt(x, y))) {
-                                if (logicRepresentation.getBuildings().get(new CoordsInt(x, y)).getSpawnTime() + 2 <= System.currentTimeMillis()) {
+                            if (LogicRepresentation.getInstance().getBuildings().containsKey(new CoordsInt(x, y))) {
+                                if (LogicRepresentation.getInstance().getBuildings().get(new CoordsInt(x, y)).getSpawnTime() + 2 <= System.currentTimeMillis()) {
                                     try {
                                         new RemoveBuildingPopUp(x, y, e.getX(), e.getY());
                                     } catch (IOException ignored) {
@@ -123,7 +119,7 @@ public class GameScreen extends JPanel {
                     if (chosenBuilding == null) return;
                     int x = e.getX() / spaceBetweenLinesPixels;
                     int y = (e.getY() - titleBarSizePixels) / spaceBetweenLinesPixels;
-                    if (e.getY() > titleBarSizePixels && !logicRepresentation.getBuildings().containsKey(new CoordsInt(x, y))) {
+                    if (e.getY() > titleBarSizePixels && !LogicRepresentation.getInstance().getBuildings().containsKey(new CoordsInt(x, y))) {
                         chosenBuilding.setPosition(new CoordsInt(x, y));
                     } else {
                         chosenBuilding.setPosition(new CoordsInt(-1, -1));
@@ -145,7 +141,7 @@ public class GameScreen extends JPanel {
         drawBackground(g);
         drawDrawables(g);
         double timeDelta = (System.currentTimeMillis() - lastTick) / 1000.0;
-        if(!paused) {
+        if (!paused) {
             tick(timeDelta);
         }
 
@@ -153,7 +149,8 @@ public class GameScreen extends JPanel {
 
         try {
             loadDesign();
-        } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+        } catch (IOException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+                 InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         lastTick = System.currentTimeMillis();
@@ -163,17 +160,17 @@ public class GameScreen extends JPanel {
     private void paintingTitleBarAndEdges(Graphics g) {
         paint_edges((Graphics2D) g);
 
-        paintTextIntoTitleBar(0, (loop.getMoney()/100 >= 1 ? 128:112), 27, "Geld: "+loop.getMoney(),"Arial", 20, g);
+        paintTextIntoTitleBar(0, (loop.getMoney() / 100 >= 1 ? 128 : 112), 27, "Geld: " + loop.getMoney(), "Arial", 20, g);
         paintTextIntoTitleBar(298, 172, 27, "Design speichern", "Helvetica", 20, g);
         paintTextIntoTitleBar(488, 132, 27, "Design laden", "Helvetica", 20, g);
-        paintTextIntoTitleBar(windowWidthPixels -132, 132, 27, "Settings", "Helvetica", 20, g);
+        paintTextIntoTitleBar(windowWidthPixels - 132, 132, 27, "Settings", "Helvetica", 20, g);
 
         paintTextIntoTitleBar(628, 220, 54, "", "Helvetica", 13, g);
 
-        paintBuildingsIntoTitleBar(DefaultTower.getStaticImage(), 630, ObjectType.DefaultTower, "Default", g);
-        paintBuildingsIntoTitleBar(Minigun.getStaticImage(), 689, ObjectType.Minigun, "Mini-Gun", g);
-        paintBuildingsIntoTitleBar(Sniper.getStaticImage(), 748, ObjectType.Sniper, "Sniper", g);
-        paintBuildingsIntoTitleBar(DefaultWall.getStaticImage(), 807, ObjectType.DefaultWall, "Wall", g);
+        paintBuildingsIntoTitleBar(DefaultTower.getStaticImage(), 630, DefaultTower.class, "Default", g);
+        paintBuildingsIntoTitleBar(Minigun.getStaticImage(), 689, Minigun.class, "Mini-Gun", g);
+        paintBuildingsIntoTitleBar(Sniper.getStaticImage(), 748, Sniper.class, "Sniper", g);
+        paintBuildingsIntoTitleBar(DefaultWall.getStaticImage(), 807, DefaultWall.class, "Wall", g);
     }
 
     private void paintTextIntoTitleBar(int x, int width, int height, String attribute, String fontType, int fontSize, Graphics g) {
@@ -181,12 +178,12 @@ public class GameScreen extends JPanel {
         g.fillRect(x, 0, width, height);
         g.setColor(Color.WHITE);
         g.setFont(new Font(fontType, Font.BOLD, fontSize));
-        g.drawString(attribute, x+2, titleBarSizePixels - 32);
+        g.drawString(attribute, x + 2, titleBarSizePixels - 32);
     }
 
-    private void paintBuildingsIntoTitleBar(Image image, int x, ObjectType buildingType, String visibleType, Graphics g){
-        if(image != null){
-            g.fillRect(x+2, 2, 37, 37);
+    private void paintBuildingsIntoTitleBar(Image image, int x, Class<? extends Building> buildingType, String visibleType, Graphics g) {
+        if (image != null) {
+            g.fillRect(x + 2, 2, 37, 37);
             g.drawImage(
                     image,
                     x,
@@ -195,11 +192,11 @@ public class GameScreen extends JPanel {
                     41,
                     null
             );
-            if(chosenBuilding!= null && chosenBuilding.getType().equals(buildingType)){
+            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingType)) {
                 g.setColor(Color.BLUE.brighter());
             }
-            g.drawString(visibleType, x, titleBarSizePixels -2);
-            if(chosenBuilding != null && chosenBuilding.getType().equals(buildingType)){
+            g.drawString(visibleType, x, titleBarSizePixels - 2);
+            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingType)) {
                 g.setColor(Color.WHITE);
             }
         }
@@ -212,27 +209,27 @@ public class GameScreen extends JPanel {
     }
 
     private void tick(double timeDelta) {
-        if (logicRepresentation.gameOver()) return;
+        if (LogicRepresentation.getInstance().gameOver()) return;
         spawnCooldown -= timeDelta;
         for (Tickable tickable : loop.getTickables()) {
-            tickable.tick(timeDelta, logicRepresentation);
+            tickable.tick(timeDelta);
         }
-        if(spawnCooldown <= 0){
-            if (!logicRepresentation.getLevel().getMonstersToSpawn().isEmpty()) {
-                logicRepresentation.spawnMonster();
+        if (spawnCooldown <= 0) {
+            if (!LogicRepresentation.getInstance().getLevel().getMonstersToSpawn().isEmpty()) {
+                LogicRepresentation.getInstance().spawnMonster();
             }
-            spawnCooldown = logicRepresentation.getLevel().getSpawnTime();
+            spawnCooldown = LogicRepresentation.getInstance().getLevel().getSpawnTime();
         }
-        for (Monster monster : logicRepresentation.getMonsterList()) {
-            if(monster.getHealth() <= 0){
-                logicRepresentation.getMonsterList().remove(monster);
+        for (Monster monster : LogicRepresentation.getInstance().getMonsterList()) {
+            if (monster.getHealth() <= 0) {
+                LogicRepresentation.getInstance().getMonsterList().remove(monster);
                 monster.die();
             }
         }
-        for (Objekt building : logicRepresentation.getBuildings().values().stream().toList()) {
+        for (GameObject building : LogicRepresentation.getInstance().getBuildings().values().stream().toList()) {
             if (building.getHealth() <= 0) {
                 building.die();
-                if(building.getType().equals(ObjectType.DefaultBasis)){
+                if (building.getClass().equals(DefaultBasis.class)) {
                     setVisible(false);
                 }
             }
@@ -241,16 +238,16 @@ public class GameScreen extends JPanel {
 
     private void drawDrawables(Graphics g) {
         List<Drawable> drawables = loop.getDrawables().reversed();
-        for(Drawable drawable : drawables){
+        for (Drawable drawable : drawables) {
             drawable.draw(g);
         }
     }
 
     private void drawBackground(Graphics g) {
-        if (logicRepresentation.getLevel().getClass().equals(Level1.class) ||
-                logicRepresentation.getLevel().getClass().equals(Level2.class) ||
-                logicRepresentation.getLevel().getClass().equals(Level3.class) ||
-                logicRepresentation.getLevel().getClass().equals(Level4.class)) {
+        if (LogicRepresentation.getInstance().getLevel().getClass().equals(Level1.class) ||
+                LogicRepresentation.getInstance().getLevel().getClass().equals(Level2.class) ||
+                LogicRepresentation.getInstance().getLevel().getClass().equals(Level3.class) ||
+                LogicRepresentation.getInstance().getLevel().getClass().equals(Level4.class)) {
             g.drawImage(
                     backgroundImageLevel3,
                     0,
@@ -259,7 +256,7 @@ public class GameScreen extends JPanel {
                     windowHeightPixels,
                     null
             );
-        } else if (logicRepresentation.getLevel().getClass().equals(Level5.class)) {
+        } else if (LogicRepresentation.getInstance().getLevel().getClass().equals(Level5.class)) {
             g.drawImage(
                     backgroundImageLevel5,
                     0,
@@ -271,46 +268,36 @@ public class GameScreen extends JPanel {
         }
     }
 
-    private void build(Class<?> toBuild, CoordsInt position, double price) {
+    private void build(Class<? extends GameObject> toBuild, CoordsInt position, double price) {
         if (price <= loop.getMoney()) {
-            if (logicRepresentation.getBuilding(position) == null) {
-                try {
-                    Building building = (Building) toBuild.getDeclaredConstructor(CoordsInt.class).newInstance(position);
-                    logicRepresentation.addBuilding(position, building);
-                    loop.setMoney(loop.getMoney() - price);
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-                for (Monster monster : logicRepresentation.getMonsterList()) {
-                    monster.updateMonsterPath(logicRepresentation);
+            if (LogicRepresentation.getInstance().getBuilding(position) == null) {
+                Building building = (Building) instantiate(toBuild, position);
+                LogicRepresentation.getInstance().addBuilding(position, building);
+                loop.setMoney(loop.getMoney() - price);
+                for (Monster monster : LogicRepresentation.getInstance().getMonsterList()) {
+                    monster.updateMonsterPath();
                 }
             }
         }
         pressed[0] = false;
     }
 
-    private void choseBuilding(String chosen){
-        String chosenSub = chosen.split("\\.")[1];
-        if(chosenBuilding == null){
+    private void choseBuilding(Class<? extends Building> chosen) {
+        if (chosenBuilding == null) {
             createChosenBuilding(chosen);
             return;
         }
         chosenBuilding.die();
-        if(chosenBuilding.getType().toString().equals(chosenSub)){
+        if (chosenBuilding.getClass().equals(chosen)) {
             chosenBuilding = null;
-        }else{
+        } else {
             createChosenBuilding(chosen);
         }
         pressed[1] = false;
     }
 
-    private void createChosenBuilding(String chosen) {
-        try {
-            Class<?> buildingClass = Class.forName("com.samuelschwenn.drawables.objects.buildings." + chosen);
-            chosenBuilding = (Building) buildingClass.getDeclaredConstructor(CoordsInt.class).newInstance(new CoordsInt(-1, -1));
-            chosenBuilding.setBlueprint(true);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    private void createChosenBuilding(Class<? extends Building> chosen) {
+        chosenBuilding = (Building) instantiate(chosen, new CoordsInt(-1, -1));
+        chosenBuilding.setBlueprint(true);
     }
 }

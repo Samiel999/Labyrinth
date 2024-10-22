@@ -1,7 +1,6 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.NoArgsConstructor;
@@ -35,13 +34,22 @@ public class Runner extends Monster {
         directionalImages.put(Direction.SOUTH, image);
     }
 
-    public Runner(CoordsInt position) {
-        super(15, 10, position, 6, 4, 5, ObjectType.Runner, false);
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(15);
+        setHealth(10);
+        setPosition(position);
+        setMovingSpeed(6);
+        setAttackSpeed(4);
+        setBounty(5);
+        setFlying(false);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateWalkingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateWalkingMonsterPath();
     }
 
     

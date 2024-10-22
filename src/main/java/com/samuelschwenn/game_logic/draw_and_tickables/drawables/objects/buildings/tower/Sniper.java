@@ -1,9 +1,7 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.BombCarrier;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Monster;
-import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import lombok.NoArgsConstructor;
 
@@ -20,25 +18,27 @@ public class Sniper extends Tower {
 
     static {
         try {
-            image = ImageIO.read(Objects.requireNonNull(BombCarrier.class.getClassLoader().getResourceAsStream("images/ScharfschuetzenTurm.png"))).getScaledInstance(spaceBetweenLinesPixels, spaceBetweenLinesPixels, Image.SCALE_SMOOTH);
+            image = ImageIO.read(Objects.requireNonNull(Sniper.class.getClassLoader().getResourceAsStream("images/ScharfschuetzenTurm.png"))).getScaledInstance(spaceBetweenLinesPixels, spaceBetweenLinesPixels, Image.SCALE_SMOOTH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Sniper(CoordsInt position) {
-        super(20, 25, position, 8, 10, 50, ObjectType.Sniper);
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(20);
+        setHealth(25);
+        setPosition(position);
+        setReach(8);
+        setAttackSpeed(10);
+        setCost(50);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public Monster[] shoot(LogicRepresentation logicRepresentation) {
-        return new Monster[]{shootNormal(logicRepresentation)};
-    }
-
-
-    @Override
-    public Image getImage() {
-        return image;
+    public Monster[] shoot() {
+        return shootNormal();
     }
 
     public static Image getStaticImage() {

@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject.instantiate;
+
 public abstract class Level implements Serializable {
     //Liste in der die zu spawnenden monster gespeichert sind
     @Getter
@@ -39,7 +41,6 @@ public abstract class Level implements Serializable {
     @Getter
     protected int anzahlMauern;
 
-    //konstruktor
     public Level(long spawnTime, int width, int height, CoordsInt basisPosition, Basis basis, CoordsInt spawnPoint, double startKapital, int anzahlMauern){
         this.width = width;
         this.height = height;
@@ -72,4 +73,12 @@ public abstract class Level implements Serializable {
     public boolean spawnAtPoint() {
         return spawnAtPoint;
     }
+
+    public void addNumberOfMonstersToSpawnList(int count, Class<? extends Monster> monsterClass) {
+        for(int i = 0; i < count; i++) {
+            Monster monster = (Monster) instantiate(monsterClass, new CoordsInt(-1, -1));
+            monstersToSpawn.add(monster);
+        }
+    }
+
 }

@@ -1,13 +1,11 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Monster;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.shots.classicshots.DefaultShot;
 import com.samuelschwenn.game_logic.draw_and_tickables.Tickable;
 import com.samuelschwenn.game_logic.LogicRepresentation;
-import com.samuelschwenn.game_logic.util.CoordsInt;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,38 +15,36 @@ import java.util.List;
 import static com.samuelschwenn.Main.loop;
 import static java.util.Collections.min;
 
-@NoArgsConstructor
 public abstract class Tower extends Building implements Tickable {
+    @Setter
     protected int reach;
     @SuppressWarnings("CanBeFinal")
+    @Setter
     protected int attackSpeed;
     protected double timeTilShoot = attackSpeed;
 
-    private Monster[] shotMonsters = new Monster[0];
+    private Monster[] shotMonsters = new Monster[1];
 
-    public Tower(int strength, int health, CoordsInt position, int reach, int speed, double kosten, ObjectType type, Image image) {
-        super(strength, health, position, type, kosten, image);
-        attackSpeed = speed;
-        this.reach = reach;
+    public Tower() {
         loop.registerTickable(this);
     }
 
     @Override
-    public void tick(double timeDelta, LogicRepresentation logicRepresentation) {
+    public void tick(double timeDelta) {
         if(isBlueprint) return;
         timeTilShoot = Math.max(0, timeTilShoot - timeDelta);
         if(timeTilShoot == 0){
-            shotMonsters = shoot(logicRepresentation);
+            shotMonsters = shoot();
             if(shotMonsters[0] != null){
                 timeTilShoot = attackSpeed;
             }
         }
     }
 
-    public abstract Monster[] shoot(LogicRepresentation logicRepresentation);
+    public abstract Monster[] shoot();
 
-    public Monster shootNormal(LogicRepresentation logicRepresentation) {
-        List<Monster> monsters = logicRepresentation.getMonsterList();
+    public Monster[] shootNormal() {
+        List<Monster> monsters = LogicRepresentation.getInstance().getMonsterList();
         List<Monster> shootingMonsters = new ArrayList<>();
         for (Monster monster: monsters) {
             if(position.isInRange(reach, monster.getPosition())){
@@ -63,9 +59,9 @@ public abstract class Tower extends Building implements Tickable {
             int minimum = min(monsterMap.keySet());
             Monster monsterToShoot = monsterMap.get(minimum);
             monsterToShoot.setHealth(monsterToShoot.getHealth() - strength);
-            return monsterToShoot;
+            return new Monster[]{monsterToShoot};
         }
-        return null;
+        return new Monster[1];
     }
 
     @Override

@@ -8,45 +8,49 @@ import lombok.Setter;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.samuelschwenn.Main.loop;
 import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
 import static com.samuelschwenn.game_app.visuals.GameScreen.titleBarSizePixels;
 
-public abstract class Objekt implements Drawable, Serializable {
+@Getter
+@Setter
+public abstract class GameObject implements Drawable, Serializable {
     protected int strength;
-    @Getter
     protected int maxHealth;
-    @Getter
     protected int health;
-    @Setter
-    @Getter
     protected CoordsInt position;
-    @Getter
-    protected ObjectType type;
-    @Getter
     protected double spawnTime;
+    protected Image image;
 
-    protected final Image image;
-
-    public Objekt(int pStrength, int pHealth, CoordsInt position, ObjectType type, Image image) {
-        strength = pStrength;
-        health = pHealth;
-        maxHealth = health;
-        this.position = position;
-        this.type = type;
-        spawnTime = (double) System.currentTimeMillis() / 1000;
-        this.image = image;
-        loop.registerDrawable(this);
-    }
-
-    public Objekt(){
+    public GameObject() {
+        maxHealth = 0;
         image = null;
+        spawnTime = (double) System.currentTimeMillis() / 1000;
         loop.registerDrawable(this);
     }
+
+    protected abstract GameObject build(CoordsInt position);
+
+    public static GameObject instantiate(Class<? extends GameObject> objectType, CoordsInt position) {
+        GameObject object;
+        try {
+            object = objectType.getDeclaredConstructor().newInstance();
+            object = object.build(position);
+        }catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        return object;
+    }
+
+
 
     public void setHealth(int health) {
         this.health = health;
+        if(maxHealth == 0){
+            maxHealth = health;
+        }
         if(this.health <= 0){
             die();
         }

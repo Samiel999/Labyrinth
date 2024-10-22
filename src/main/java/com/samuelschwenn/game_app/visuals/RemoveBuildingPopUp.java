@@ -2,6 +2,7 @@ package com.samuelschwenn.game_app.visuals;
 
 
 
+import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 
@@ -68,7 +69,7 @@ public class RemoveBuildingPopUp extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e1) {
         if (e1.getActionCommand().equals("Delete")) {
-            Building building = loop.getLogic_representation().getBuildings().get(new CoordsInt(targetXCoordinate, targetYCoordinate));
+            Building building = LogicRepresentation.getInstance().getBuildings().get(new CoordsInt(targetXCoordinate, targetYCoordinate));
             if(building == null){
                 System.out.println("Something went wrong");
             }

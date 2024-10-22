@@ -1,8 +1,11 @@
 package com.samuelschwenn.game_logic;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.DefaultTower;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Minigun;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Sniper;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Boss1;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Monster;
 import com.samuelschwenn.game_logic.draw_and_tickables.Tickable;
 import com.samuelschwenn.game_logic.level.Level;
@@ -12,7 +15,6 @@ import org.javatuples.Pair;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -26,45 +28,61 @@ import static com.samuelschwenn.game_app.util.SoundUtils.stopMusic;
 
 //LogicRepresentation des Spiels
 public class LogicRepresentation implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    private static LogicRepresentation _instance;
+
+
     @Getter
-    private final SimpleWeightedGraph<CoordsInt, DefaultWeightedEdge> mapGraph;
+    private SimpleWeightedGraph<CoordsInt, DefaultWeightedEdge> mapGraph;
     //Liste an Gebäuden
     @Getter
     private final Map<CoordsInt, Building> buildings;
     //Width and Height
     @Getter
-    private final int width;
+    private int width;
     @Getter
-    private final int height;
+    private int height;
     //basis
     @Getter
-    private final Basis basis;
+    private Basis basis;
     //Liste aller existierenden monster
     @Getter
     private final List<Monster> monsterList;
-    private final List<Monster> monstersToSpawn;
+    private List<Monster> monstersToSpawn;
     //aktuelles level
     @Getter
-    private final Level level;
+    private Level level;
     //spawnpoint
-    private final CoordsInt spawnpoint;
+    private CoordsInt spawnpoint;
 
-    public LogicRepresentation(Level level) {
-        //Initialisiert den Graphen und die Liste der Gebäude
+    private LogicRepresentation() {
+        buildings = new HashMap<>();
+        monsterList = new CopyOnWriteArrayList<>();
+    }
+
+    public static LogicRepresentation getInstance() {
+        if (_instance == null) {
+            _instance = new LogicRepresentation();
+        }
+        return _instance;
+    }
+
+    public static void resetInstance(){
+        _instance = null;
+    }
+
+    public void initializeWithLevel(Level level) {
         this.level = level;
         width = level.getWidth();
         height = level.getHeight();
         mapGraph = createMap(height, width);
-        buildings = new HashMap<>();
+
         basis = level.getBasis();
         basis.setPosition(level.getBasisPosition());
         addBuilding(basis.getPosition(), basis);
-        monsterList = new CopyOnWriteArrayList<>();
         monstersToSpawn = level.getMonstersToSpawn();
         spawnpoint = level.getSpawnPoint();
     }
+
 
     public void addBuilding(CoordsInt coordsInt, Building building) {
         modifyBuildings(coordsInt, building, true);
@@ -106,7 +124,6 @@ public class LogicRepresentation implements Serializable {
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 CoordsInt newCoordsInt = new CoordsInt(j, i);
-//                System.out.println(newCoordsInt.toString());
                 graph.addVertex(newCoordsInt);
             }
         }
@@ -117,12 +134,10 @@ public class LogicRepresentation implements Serializable {
                 if(i < height - 1){
                     DefaultWeightedEdge edge = graph.addEdge(new CoordsInt(j, i), new CoordsInt(j, i + 1));
                     graph.setEdgeWeight(edge, 1);
-//                    System.out.println(new CoordsInt(i, j).toString() + " -> " + new CoordsInt(i + 1, j).toString());
                 }
                 if(j < width - 1){
                     DefaultWeightedEdge edge = graph.addEdge(new CoordsInt(j, i), new CoordsInt(j + 1, i));
                     graph.setEdgeWeight(edge, 1);
-//                    System.out.println(new CoordsInt(i, j).toString() + " -> " + new CoordsInt(i, j + 1).toString());
                 }
             }
         }
@@ -144,11 +159,11 @@ public class LogicRepresentation implements Serializable {
     // Es wird ein monster gespawnt
     public void spawnMonster() {
         Monster monster = createAndSetupMonster();
-        if(monster.getType().equals(ObjectType.Boss1)){
+        if(monster.getClass().equals(Boss1.class)){
             stopMusic();
             playMusic(5);
         }
-        monster.updateMonsterPath(this);
+        monster.updateMonsterPath();
     }
 
     private Monster createAndSetupMonster() {
@@ -177,7 +192,7 @@ public class LogicRepresentation implements Serializable {
 
     public void addToDrawablesAndTickables(){
         for(Building building : buildings.values()){
-            if(building.getType().equals(ObjectType.DefaultTower)||building.getType().equals(ObjectType.Sniper) || building.getType().equals(ObjectType.Minigun)){
+            if(building.getClass().equals(DefaultTower.class)||building.getClass().equals(Sniper.class) || building.getClass().equals(Minigun.class)){
                 loop.registerTickable((Tickable) building);
             }
             loop.registerDrawable(building);

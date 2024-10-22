@@ -23,7 +23,6 @@ import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 public class Main {
     public static UpdateLoop loop;
 
-    public static LogicRepresentation logicRepresentation;  // A map of our game world
     public static String loadDesign = "";
 
     public static final Sound sound = new Sound();
@@ -55,9 +54,9 @@ public class Main {
                     Building building = (Building) buildingToBuild.getDeclaredConstructor(CoordsInt.class).newInstance(position);
 
                     if (loop.getMoney() - building.getCost() >= 0) {
-                        logicRepresentation.addBuilding(position, building);
-                        for (Monster monster : logicRepresentation.getMonsterList()) {
-                            monster.updateMonsterPath(logicRepresentation);
+                        LogicRepresentation.getInstance().addBuilding(position, building);
+                        for (Monster monster : LogicRepresentation.getInstance().getMonsterList()) {
+                            monster.updateMonsterPath();
                         }
                         playSFX(8);
                         loop.setMoney(loop.getMoney() - building.getCost());

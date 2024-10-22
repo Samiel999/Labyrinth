@@ -23,14 +23,10 @@ public class Level4 extends Level{
         addSpawnArea(new Pair<>(new CoordsInt(0, height - 1), new CoordsInt(width - 1, height - 1)));
         addSpawnArea(new Pair<>(new CoordsInt(0, 0), new CoordsInt(width - 1, 0)));
         addSpawnArea(new Pair<>(new CoordsInt(width - 1, 0), new CoordsInt(width - 1, height - 1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new Lakai(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new BombCarrier(new CoordsInt(-1, -1)));
-        monstersToSpawn.add(new BombCarrier(new CoordsInt(-1, -1)));
+
+        addNumberOfMonstersToSpawnList(6, Lakai.class);
+        addNumberOfMonstersToSpawnList(2, BombCarrier.class);
+
         basis.setHealth(basis.getMaxHealth());
         basis.setPosition(new CoordsInt(19, 10));
     }

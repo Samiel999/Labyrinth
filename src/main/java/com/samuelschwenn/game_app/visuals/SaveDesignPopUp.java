@@ -1,5 +1,6 @@
 package com.samuelschwenn.game_app.visuals;
 
+import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
 import com.samuelschwenn.game_logic.util.CoordsInt;
@@ -12,8 +13,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
-
-import static com.samuelschwenn.Main.loop;
 
 public class SaveDesignPopUp extends JFrame {
     public SaveDesignPopUp() {
@@ -31,7 +30,7 @@ public class SaveDesignPopUp extends JFrame {
         JButton acceptText = new JButton("SaveDesignPopUp Design");
         acceptText.addActionListener(
                 _ -> {
-                    Map<CoordsInt, Building> listToSave = loop.getLogic_representation().getBuildings();
+                    Map<CoordsInt, Building> listToSave = LogicRepresentation.getInstance().getBuildings();
                     File saveFile = new File(textField.getText()+".txt");
                     try {
                         if(saveFile.createNewFile()){

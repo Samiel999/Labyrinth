@@ -1,5 +1,6 @@
 package com.samuelschwenn.game_logic.util;
 
+import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
 import com.samuelschwenn.game_logic.level.Level;
 import com.samuelschwenn.game_app.visuals.GameScreen;
@@ -29,7 +30,7 @@ public class SetupMethods {
         loop.resetTickables();
         loop.resetBasis();
         try {
-            Class<?> levelToLoad = Class.forName("com.samuelschwenn.level.Level" + currentLevel);
+            Class<?> levelToLoad = Class.forName("com.samuelschwenn.game_logic.level.Level" + currentLevel);
             return (Level) levelToLoad.getDeclaredConstructor(Basis.class).newInstance(loop.getBasis());
         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException |
                  NoSuchMethodException e) {
@@ -46,7 +47,7 @@ public class SetupMethods {
                 game_frame.setVisible(false);
                 try (FileOutputStream fileOutputStream = new FileOutputStream("Save.txt");
                      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                    objectOutputStream.writeObject(loop.getLogic_representation());
+                    objectOutputStream.writeObject(LogicRepresentation.getInstance());
                     objectOutputStream.flush();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -57,9 +58,9 @@ public class SetupMethods {
         });
         loop.resetTickables();
         loop.resetDrawables();
-        loop.getLogic_representation().addToDrawablesAndTickables();
-        loop.setBasis(loop.getLogic_representation().getBasis());
-        GameScreen gameScreen = new GameScreen(loop.getLogic_representation());
+        LogicRepresentation.getInstance().addToDrawablesAndTickables();
+        loop.setBasis(LogicRepresentation.getInstance().getBasis());
+        GameScreen gameScreen = new GameScreen();
         game_frame.setContentPane(gameScreen);
         game_frame.setSize(gameScreen.getSize());
         game_frame.setVisible(true);

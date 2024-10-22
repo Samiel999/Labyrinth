@@ -1,10 +1,8 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
-import lombok.NoArgsConstructor;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,7 +14,6 @@ import java.util.Objects;
 import static com.samuelschwenn.game_app.util.ImageUtil.mirrorImage;
 import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
 
-@NoArgsConstructor
 public class BombCarrier extends Monster {
     private static Image image;
     static {
@@ -35,13 +32,22 @@ public class BombCarrier extends Monster {
         directionalImages.put(Direction.SOUTH, image);
     }
 
-    public BombCarrier(CoordsInt position) {
-        super(30, 35, position, 1, 1, 40, ObjectType.BombCarrier, true);
+    @Override
+    protected GameObject build(CoordsInt position) {
+        setStrength(30);
+        setHealth(35);
+        setPosition(position);
+        setMovingSpeed(1);
+        setAttackSpeed(1);
+        setBounty(40);
+        setFlying(true);
+        setImage(image);
+        return this;
     }
 
     @Override
-    public void updateMonsterPath(LogicRepresentation logicRepresentation) {
-        updateFlyingMonsterPath(logicRepresentation);
+    public void updateMonsterPath() {
+        updateFlyingMonsterPath();
     }
 
     @Override

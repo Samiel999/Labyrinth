@@ -2,7 +2,6 @@ package com.samuelschwenn.game_logic.draw_and_tickables.drawables.shots.classics
 
 
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.shots.Shot;
-import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.util.CoordsDouble;
 
 import java.awt.*;
@@ -10,8 +9,8 @@ import java.awt.*;
 import static com.samuelschwenn.Main.loop;
 
 public abstract class ClassicShot extends Shot {
-    protected Color color;
-    protected int thickness;
+    protected final Color color;
+    protected final int thickness;
 
     public ClassicShot(Color color, int thickness, double duration, CoordsDouble startingPosition, CoordsDouble targetPosition, float startingOpacity) {
         super(duration, startingPosition, targetPosition, startingOpacity);
@@ -34,7 +33,7 @@ public abstract class ClassicShot extends Shot {
     }
 
     @Override
-    public void tick(double timeDelta, LogicRepresentation logicRepresentation) {
+    public void tick(double timeDelta) {
         System.out.println(timeDelta);
         if (progress >= duration) {
             loop.unregisterDrawable(this);
@@ -44,14 +43,4 @@ public abstract class ClassicShot extends Shot {
         opacity -= (float) opacityDifference;
         progress += timeDelta;
     }
-
-//    private float normalizedOpacity() {
-//        if (opacity > 1) {
-//            return 1.0f;
-//        }
-//        if (opacity < 0) {
-//            return 0.0f;
-//        }
-//        return opacity;
-//    }
 }

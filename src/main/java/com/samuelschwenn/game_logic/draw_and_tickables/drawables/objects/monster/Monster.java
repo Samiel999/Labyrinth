@@ -1,14 +1,14 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
 
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.Objekt;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.draw_and_tickables.Tickable;
 import com.samuelschwenn.game_logic.LogicRepresentation;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.DefaultBasis;
 import com.samuelschwenn.game_logic.util.CoordsDouble;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import com.samuelschwenn.game_logic.util.Direction;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -18,68 +18,64 @@ import java.io.Serializable;
 import java.util.List;
 
 import static com.samuelschwenn.Main.loop;
-import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.ObjectType.DefaultBasis;
 import static com.samuelschwenn.game_logic.util.LoopType.game_over;
 import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 
-@NoArgsConstructor
-public abstract class Monster extends Objekt implements Tickable, Serializable {
+public abstract class Monster extends GameObject implements Tickable, Serializable {
+    @Setter
     protected float movingSpeed;
-    @SuppressWarnings("CanBeFinal")
+    @Setter
     protected int attackSpeed;
     @Getter
     protected int stepsToGoal;
+    @Setter
     protected double bounty;
     protected double monsterPathWeight;
     protected List<CoordsInt> monsterPathNodes;
     @Getter
     protected CoordsDouble drawnPosition;
     protected double attackCooldown = attackSpeed;
+    @Setter
     protected boolean flying;
 
-    public Monster(int strength, int health, CoordsInt position, float movingSpeed, int attackSpeed, double bounty, ObjectType type, boolean flying){
-        super(strength, health, position, type);
-        this.attackSpeed = attackSpeed;
-        this.movingSpeed = movingSpeed;
-        this.bounty = bounty;
+    public Monster(){
+        super();
         stepsToGoal = 250;
-        this.drawnPosition = position.toCoordsDouble();
-        this.flying = flying;
         loop.registerTickable(this);
     }
 
-    public void updateFlyingMonsterPath(LogicRepresentation logicRepresentation) {
-        SimpleWeightedGraph<CoordsInt, DefaultWeightedEdge> graph = logicRepresentation.getMapGraph();
+    public void updateFlyingMonsterPath() {
+        SimpleWeightedGraph<CoordsInt, DefaultWeightedEdge> graph = LogicRepresentation.getInstance().getMapGraph();
         for (DefaultWeightedEdge edge : graph.edgeSet()){
             graph.setEdgeWeight(edge, 1);
         }
-        CoordsInt positionBasis = logicRepresentation.getBasis().getPosition();
+        CoordsInt positionBasis = LogicRepresentation.getInstance().getBasis().getPosition();
         for (DefaultWeightedEdge edge : graph.edgesOf(positionBasis)){
             graph.setEdgeWeight(edge, 10000);
         }
         DijkstraShortestPath<CoordsInt, DefaultWeightedEdge> pathfinder = new DijkstraShortestPath<>(graph);
-        GraphPath<CoordsInt, DefaultWeightedEdge> monsterPath = pathfinder.getPath(position, logicRepresentation.getBasis().getPosition());
+        GraphPath<CoordsInt, DefaultWeightedEdge> monsterPath = pathfinder.getPath(position, LogicRepresentation.getInstance().getBasis().getPosition());
         monsterPathWeight = monsterPath.getWeight();
         monsterPathNodes = monsterPath.getVertexList();
     }
 
-    public void updateWalkingMonsterPath(LogicRepresentation logicRepresentation) {
-        DijkstraShortestPath<CoordsInt, DefaultWeightedEdge> pathfinder = new DijkstraShortestPath<>(logicRepresentation.getMapGraph());
-        GraphPath<CoordsInt, DefaultWeightedEdge> monsterPath = pathfinder.getPath(position, logicRepresentation.getBasis().getPosition());
+    public void updateWalkingMonsterPath() {
+        DijkstraShortestPath<CoordsInt, DefaultWeightedEdge> pathfinder = new DijkstraShortestPath<>(LogicRepresentation.getInstance().getMapGraph());
+        GraphPath<CoordsInt, DefaultWeightedEdge> monsterPath = pathfinder.getPath(position, LogicRepresentation.getInstance().getBasis().getPosition());
         monsterPathWeight = monsterPath.getWeight();
         monsterPathNodes = monsterPath.getVertexList();
     }
 
-    public void tick(double timeDelta, LogicRepresentation logicRepresentation) {
+    public void tick(double timeDelta) {
         if(position.equals(new CoordsInt(-1, -1))) return;
-        moveTowardsPosition(timeDelta, logicRepresentation);
+        moveTowardsPosition(timeDelta);
     }
 
-    public void moveTowardsPosition(double timeDelta, LogicRepresentation logicRepresentation) {
+    public void moveTowardsPosition(double timeDelta) {
         Direction directionToMove = drawnPosition.getDirectionTo(position.toCoordsDouble());
 
         if (directionToMove == null) {
-            makeMove(timeDelta, logicRepresentation);
+            makeMove(timeDelta);
             return;
         }
 
@@ -101,18 +97,18 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
         this.drawnPosition = drawnPosition.add(moved);
     }
 
-    public void makeMove(double timeDelta, LogicRepresentation logicRepresentation) {
+    public void makeMove(double timeDelta) {
         CoordsInt nextPosition = monsterPathNodes.get(1);
         if (!flying) {
-            if (attackingWalking(logicRepresentation)) {
-                attack(timeDelta, logicRepresentation.getBuildings().get(nextPosition));
+            if (attackingWalking()) {
+                attack(timeDelta, LogicRepresentation.getInstance().getBuildings().get(nextPosition));
             } else {
                 stepsToGoal = monsterPathNodes.size() - 2;
                 position = nextPosition;
             }
         } else {
-            if (attackingFlying(logicRepresentation)) {
-                attack(timeDelta, logicRepresentation.getBuildings().get(nextPosition));
+            if (attackingFlying()) {
+                attack(timeDelta, LogicRepresentation.getInstance().getBuildings().get(nextPosition));
             } else {
                 stepsToGoal = monsterPathNodes.size() - 2;
                 position = nextPosition;
@@ -120,21 +116,21 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
         }
     }
 
-    public boolean attackingWalking(LogicRepresentation logicRepresentation) {
-        return monsterPathWeight >= 10000 && logicRepresentation.getBuildings().containsKey(monsterPathNodes.get(1));
+    public boolean attackingWalking() {
+        return monsterPathWeight >= 10000 && LogicRepresentation.getInstance().getBuildings().containsKey(monsterPathNodes.get(1));
     }
 
-    public boolean attackingFlying(LogicRepresentation logicRepresentation) {
-        return monsterPathNodes.get(1).equals(logicRepresentation.getBasis().getPosition());
+    public boolean attackingFlying() {
+        return monsterPathNodes.get(1).equals(LogicRepresentation.getInstance().getBasis().getPosition());
     }
 
-    public abstract void updateMonsterPath(LogicRepresentation logicRepresentation);
+    public abstract void updateMonsterPath();
 
-    public void attack(double timeDelta, Objekt object) {
+    public void attack(double timeDelta, GameObject object) {
         attackCooldown -= timeDelta;
         if(attackCooldown <= 0) {
             object.setHealth(object.getHealth() - strength);
-            if (object.getType().equals(DefaultBasis)) {
+            if (object.getClass().equals(DefaultBasis.class)) {
                 playSFX(10);
             }
             attackCooldown = attackSpeed;
@@ -155,20 +151,18 @@ public abstract class Monster extends Objekt implements Tickable, Serializable {
         return 1;
     }
 
-//    public boolean hasArrived(){
-//        return position.equals(drawnPosition);
-//    }
-
     @Override
     public void die() {
         super.die();
         loop.unregisterTickable(this);
         loop.setMoney(loop.getMoney() + bounty);
-        if (type.equals(ObjectType.Boss1)) {
+        if (this.getClass().equals(Boss1.class)) {
             playSFX(9);
-        } else playSFX(1);
+        } else{
+            playSFX(1);
+        }
 
-        if (loop.getLogic_representation().getMonsterList().isEmpty() && loop.getLogic_representation().getLevel().getMonstersToSpawn().isEmpty()) {
+        if (LogicRepresentation.getInstance().getMonsterList().isEmpty() && LogicRepresentation.getInstance().getLevel().getMonstersToSpawn().isEmpty()) {
             loop.update(game_over);
         }
     }
