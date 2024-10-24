@@ -5,7 +5,6 @@ import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster
 import com.samuelschwenn.game_logic.util.CoordsInt;
 
 public class DefaultTower extends Tower {
-
     @Override
     protected GameObject build(CoordsInt position) {
         setStrength(5);
@@ -20,6 +19,6 @@ public class DefaultTower extends Tower {
 
     @Override
     public Monster[] shoot() {
-        return shootNormal();
+        return shootOneMonster();
     }
 }

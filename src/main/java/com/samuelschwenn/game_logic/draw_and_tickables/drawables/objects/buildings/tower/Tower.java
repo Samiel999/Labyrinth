@@ -18,7 +18,6 @@ import static java.util.Collections.min;
 public abstract class Tower extends Building implements Tickable {
     @Setter
     protected int reach;
-    @SuppressWarnings("CanBeFinal")
     @Setter
     protected int attackSpeed;
     protected double timeTilShoot = attackSpeed;
@@ -43,25 +42,36 @@ public abstract class Tower extends Building implements Tickable {
 
     public abstract Monster[] shoot();
 
-    public Monster[] shootNormal() {
+    public Monster[] shootOneMonster() {
         List<Monster> monsters = LogicRepresentation.getInstance().getMonsterList();
+        List<Monster> monstersInRange = getMonstersInRange(monsters);
+
+        if(!monstersInRange.isEmpty()) {
+            Monster monsterToShoot = getMonsterToShoot(monstersInRange);
+            monsterToShoot.setHealth(monsterToShoot.getHealth() - strength);
+            return new Monster[]{monsterToShoot};
+        }
+
+        return new Monster[1];
+    }
+
+    private List<Monster> getMonstersInRange(List<Monster> monsters) {
         List<Monster> shootingMonsters = new ArrayList<>();
         for (Monster monster: monsters) {
             if(position.isInRange(reach, monster.getPosition())){
                 shootingMonsters.add(monster);
             }
         }
-        if(!shootingMonsters.isEmpty()) {
-            HashMap<Integer, Monster> monsterMap = new HashMap<>();
-            for(Monster monster : shootingMonsters){
-                monsterMap.put(monster.getStepsToGoal(), monster);
-            }
-            int minimum = min(monsterMap.keySet());
-            Monster monsterToShoot = monsterMap.get(minimum);
-            monsterToShoot.setHealth(monsterToShoot.getHealth() - strength);
-            return new Monster[]{monsterToShoot};
+        return shootingMonsters;
+    }
+
+    private Monster getMonsterToShoot(List<Monster> monstersInRangeList) {
+        HashMap<Integer, Monster> monstersInRange = new HashMap<>();
+        for(Monster monster : monstersInRangeList){
+            monstersInRange.put(monster.getStepsToGoal(), monster);
         }
-        return new Monster[1];
+        int closestToGoal = min(monstersInRange.keySet());
+        return monstersInRange.get(closestToGoal);
     }
 
     @Override

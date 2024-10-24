@@ -19,6 +19,6 @@ public class Sniper extends Tower {
 
     @Override
     public Monster[] shoot() {
-        return shootNormal();
+        return shootOneMonster();
     }
 }
