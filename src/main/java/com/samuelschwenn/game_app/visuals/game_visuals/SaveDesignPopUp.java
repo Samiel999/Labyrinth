@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.game_visuals;
 
 import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building;

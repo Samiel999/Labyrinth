@@ -22,19 +22,12 @@ import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 // Main class
 public class Main {
     public static UpdateLoop loop;
-
     public static String loadDesign = "";
-
     public static final Sound sound = new Sound();
     public static final SFX sfx = new SFX();
     public static Boolean source = false;
 
 
-    /**
-     * The main method of the program. It runs the game loop and controls the flow of the game.
-     *
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         loop = new UpdateLoop();
         Thread loop_thread = new Thread(loop);

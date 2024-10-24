@@ -6,8 +6,8 @@ import com.samuelschwenn.game_logic.util.CoordsDouble;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 
 import static com.samuelschwenn.Main.loop;
-import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
-import static com.samuelschwenn.game_app.visuals.GameScreen.titleBarSizePixels;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.spaceBetweenLinesPixels;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.titleBarSizePixels;
 
 public abstract class Shot implements Drawable, Tickable {
     protected double progress;

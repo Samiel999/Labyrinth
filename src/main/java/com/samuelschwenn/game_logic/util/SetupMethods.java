@@ -3,8 +3,8 @@ package com.samuelschwenn.game_logic.util;
 import com.samuelschwenn.game_logic.LogicRepresentation;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
 import com.samuelschwenn.game_logic.level.Level;
-import com.samuelschwenn.game_app.visuals.GameScreen;
-import com.samuelschwenn.game_app.visuals.StartGamePopUp;
+import com.samuelschwenn.game_app.visuals.game_visuals.GameScreen;
+import com.samuelschwenn.game_app.visuals.game_visuals.StartGamePopUp;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

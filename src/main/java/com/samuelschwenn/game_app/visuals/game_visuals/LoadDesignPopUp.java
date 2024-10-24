@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.game_visuals;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class LoadDesignPopUp extends JFrame {
         JTextField textField = new JTextField("", 8);
         JButton acceptText = new JButton("LoadDesignPopUp level");
         acceptText.addActionListener(
-                e -> {
+                _ -> {
                     loadDesign = textField.getText();
                     setVisible(false);
                     GameScreen.pressed[1] = false;

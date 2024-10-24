@@ -1,12 +1,12 @@
 package com.samuelschwenn.game_app.util;
 
 import com.samuelschwenn.Main;
-import com.samuelschwenn.game_app.visuals.Settings;
+import com.samuelschwenn.game_app.visuals.main_menu.Settings;
 
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
-public class SoundUtils {
+public final class SoundUtils {
     public static void setVolume(float volume, Clip clip) {
         if (clip == null) {
             return; // Exit if clip is not initialized

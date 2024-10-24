@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.main_menu;
 
 import com.samuelschwenn.Main;
 import com.samuelschwenn.game_logic.util.LoopType;

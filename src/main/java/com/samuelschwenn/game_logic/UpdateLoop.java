@@ -1,6 +1,10 @@
 package com.samuelschwenn.game_logic;
 
-import com.samuelschwenn.game_app.visuals.*;
+import com.samuelschwenn.game_app.visuals.end_screen.LosingScreen;
+import com.samuelschwenn.game_app.visuals.end_screen.WinningScreen;
+import com.samuelschwenn.game_app.visuals.main_menu.LevelSelectionScreen;
+import com.samuelschwenn.game_app.visuals.main_menu.MainMenu;
+import com.samuelschwenn.game_app.visuals.main_menu.Settings;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.DefaultBasis;
 import com.samuelschwenn.game_logic.draw_and_tickables.Drawable;
@@ -22,7 +26,7 @@ import static com.samuelschwenn.game_logic.util.LoopType.game_loop_pending;
 import static com.samuelschwenn.game_logic.util.LoopType.main_menu;
 import static com.samuelschwenn.game_app.util.SoundUtils.playMusic;
 import static com.samuelschwenn.game_app.util.SoundUtils.stopMusic;
-import static com.samuelschwenn.game_app.visuals.GameScreen.paused;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.paused;
 
 public class UpdateLoop implements Runnable {
     private JFrame[] current_graphic = new JFrame[2];

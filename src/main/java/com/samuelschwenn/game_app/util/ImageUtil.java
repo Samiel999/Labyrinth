@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class ImageUtil {
+public final class ImageUtil {
     public static BufferedImage mirrorImage(Image image){
         AffineTransform at = new AffineTransform();
         at.concatenate(AffineTransform.getScaleInstance(-1, 1));

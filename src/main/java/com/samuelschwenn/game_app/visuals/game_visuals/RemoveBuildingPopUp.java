@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.game_visuals;
 
 
 
@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static com.samuelschwenn.Main.loop;
-import static com.samuelschwenn.game_app.visuals.GameScreen.pressed;
-import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.pressed;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.spaceBetweenLinesPixels;
 
 public class RemoveBuildingPopUp extends JFrame implements ActionListener {
     private final int targetXCoordinate;

@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.end_screen;
 
 import javax.swing.*;
 import java.awt.*;

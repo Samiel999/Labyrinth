@@ -1,18 +1,24 @@
 package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects;
 
+import com.samuelschwenn.game_app.visuals.register.ImageRegister;
 import com.samuelschwenn.game_logic.draw_and_tickables.Drawable;
 import com.samuelschwenn.game_logic.util.CoordsDouble;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import static com.samuelschwenn.Main.loop;
-import static com.samuelschwenn.game_app.visuals.GameScreen.spaceBetweenLinesPixels;
-import static com.samuelschwenn.game_app.visuals.GameScreen.titleBarSizePixels;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.spaceBetweenLinesPixels;
+import static com.samuelschwenn.game_app.visuals.game_visuals.GameScreen.titleBarSizePixels;
 
 @Getter
 @Setter
@@ -22,12 +28,13 @@ public abstract class GameObject implements Drawable, Serializable {
     protected int health;
     protected CoordsInt position;
     protected double spawnTime;
-    protected Image image;
+    protected String imagePath;
+    private ImageRegister imageRegister;
 
     public GameObject() {
         maxHealth = 0;
-        image = null;
         spawnTime = (double) System.currentTimeMillis() / 1000;
+        imageRegister = ImageRegister.getInstance();
         loop.registerDrawable(this);
     }
 
@@ -44,6 +51,29 @@ public abstract class GameObject implements Drawable, Serializable {
         return object;
     }
 
+    public Image getImage() {
+        if(imageRegister.getFromRegister(imagePath) != null){
+            return imageRegister.getFromRegister(imagePath);
+        }
+        return getImageInit();
+    }
+
+    public Image getImageInit(){
+        if(imagePath == null){
+            return null;
+        }
+        try(
+                InputStream stream = GameObject.class.getClassLoader().getResourceAsStream("images/"+imagePath);
+                InputStream nonNullStream = Objects.requireNonNull(stream)
+        ){
+            BufferedImage image = ImageIO.read(nonNullStream);
+            Image scaledImage = image.getScaledInstance(spaceBetweenLinesPixels, spaceBetweenLinesPixels, Image.SCALE_SMOOTH);
+            ImageRegister.getInstance().addToRegister(imagePath, scaledImage);
+            return scaledImage;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public void setHealth(int health) {
@@ -67,6 +97,7 @@ public abstract class GameObject implements Drawable, Serializable {
         CoordsDouble pixelPosition = this.getDrawnPosition().scale(spaceBetweenLinesPixels);
         Graphics2D g2 = (Graphics2D) g;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getOpacity()));
+
         g2.drawImage(
                 this.getImage(),
                 (int) pixelPosition.x(),
@@ -86,10 +117,6 @@ public abstract class GameObject implements Drawable, Serializable {
             graphics2D.setColor(Color.red);
             graphics2D.drawLine((int) (objektPosition.x()+ 2), (int) (objektPosition.y() + 2 + titleBarSizePixels), (int) (objektPosition.x() + width), (int) (objektPosition.y() + 2 + titleBarSizePixels));
         }
-    }
-
-    protected Image getImage(){
-        return image;
     }
 
     abstract protected CoordsDouble getDrawnPosition();

@@ -1,4 +1,4 @@
-package com.samuelschwenn.game_app.visuals;
+package com.samuelschwenn.game_app.visuals.game_visuals;
 
 // Import of other classes into the project
 
@@ -33,6 +33,7 @@ import java.util.Objects;
 import static com.samuelschwenn.Main.loadDesign;
 import static com.samuelschwenn.Main.loop;
 import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject.instantiate;
+import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.Building.getStaticImageOf;
 
 // Main window which runs the game
 public class GameScreen extends JPanel {
@@ -167,10 +168,10 @@ public class GameScreen extends JPanel {
 
         paintTextIntoTitleBar(628, 220, 54, "", "Helvetica", 13, g);
 
-        paintBuildingsIntoTitleBar(DefaultTower.getStaticImage(), 630, DefaultTower.class, "Default", g);
-        paintBuildingsIntoTitleBar(Minigun.getStaticImage(), 689, Minigun.class, "Mini-Gun", g);
-        paintBuildingsIntoTitleBar(Sniper.getStaticImage(), 748, Sniper.class, "Sniper", g);
-        paintBuildingsIntoTitleBar(DefaultWall.getStaticImage(), 807, DefaultWall.class, "Wall", g);
+        paintBuildingsIntoTitleBar(630, DefaultTower.class, "Default", g);
+        paintBuildingsIntoTitleBar(689, Minigun.class, "Mini-Gun", g);
+        paintBuildingsIntoTitleBar(748, Sniper.class, "Sniper", g);
+        paintBuildingsIntoTitleBar(807, DefaultWall.class, "Wall", g);
     }
 
     private void paintTextIntoTitleBar(int x, int width, int height, String attribute, String fontType, int fontSize, Graphics g) {
@@ -181,7 +182,10 @@ public class GameScreen extends JPanel {
         g.drawString(attribute, x + 2, titleBarSizePixels - 32);
     }
 
-    private void paintBuildingsIntoTitleBar(Image image, int x, Class<? extends Building> buildingType, String visibleType, Graphics g) {
+    private void paintBuildingsIntoTitleBar(int x, Class<? extends Building> buildingClass, String visibleType, Graphics g) {
+        Image image = getStaticImageOf(buildingClass);
+
+
         if (image != null) {
             g.fillRect(x + 2, 2, 37, 37);
             g.drawImage(
@@ -192,11 +196,11 @@ public class GameScreen extends JPanel {
                     41,
                     null
             );
-            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingType)) {
+            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingClass)) {
                 g.setColor(Color.BLUE.brighter());
             }
             g.drawString(visibleType, x, titleBarSizePixels - 2);
-            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingType)) {
+            if (chosenBuilding != null && chosenBuilding.getClass().equals(buildingClass)) {
                 g.setColor(Color.WHITE);
             }
         }

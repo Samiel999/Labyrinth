@@ -14,10 +14,12 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.List;
 
 import static com.samuelschwenn.Main.loop;
+import static com.samuelschwenn.game_app.util.ImageUtil.mirrorImage;
 import static com.samuelschwenn.game_logic.util.LoopType.game_over;
 import static com.samuelschwenn.game_app.util.SoundUtils.playSFX;
 
@@ -171,5 +173,13 @@ public abstract class Monster extends GameObject implements Tickable, Serializab
     public void setPosition(CoordsInt position) {
         super.setPosition(position);
         this.drawnPosition = position.toCoordsDouble();
+    }
+
+    @Override
+    public Image getImage() {
+        return switch (getDirection()) {
+            case WEST -> mirrorImage(super.getImage());
+            case EAST, NORTH, SOUTH -> super.getImage();
+        };
     }
 }
