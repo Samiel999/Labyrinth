@@ -37,12 +37,16 @@ public record CoordsDouble(double x, double y) implements Serializable {
         }
     }
 
-    public CoordsDouble scale(double factor) {
+    public CoordsDouble multipliedBy(double factor) {
         return new CoordsDouble(x * factor, y * factor);
     }
 
     public CoordsDouble add(CoordsDouble other) {
         return new CoordsDouble(x + other.x, y + other.y);
+    }
+
+    public CoordsDouble subtract(CoordsDouble other) {
+        return new CoordsDouble(x - other.x, y - other.y);
     }
 
     public CoordsDouble maxCoords(CoordsDouble other) {

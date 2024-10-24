@@ -5,7 +5,7 @@ import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildin
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.DefaultTower;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Minigun;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.tower.Sniper;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Boss1;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.walking.Boss1;
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Monster;
 import com.samuelschwenn.game_logic.draw_and_tickables.Tickable;
 import com.samuelschwenn.game_logic.level.Level;

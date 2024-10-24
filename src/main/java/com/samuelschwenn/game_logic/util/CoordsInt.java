@@ -22,4 +22,8 @@ public record CoordsInt(int x, int y) implements Serializable {
     public boolean equals(CoordsInt other) {
         return other.x == this.x && other.y == this.y;
     }
+
+    public CoordsDouble subtract(CoordsDouble other) {
+        return new CoordsDouble(x - other.x(), y - other.y());
+    }
 }

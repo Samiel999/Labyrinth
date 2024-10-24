@@ -1,9 +1,9 @@
-package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster;
+package com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.flying;
 
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 
-public class Lakai extends Monster{
+public class Lakai extends FlyingMonster {
     @Override
     protected GameObject build(CoordsInt position) {
         setStrength(10);
@@ -12,13 +12,7 @@ public class Lakai extends Monster{
         setMovingSpeed(4);
         setAttackSpeed(3);
         setBounty(20);
-        setFlying(true);
         setImagePath("Lakai.png");
         return this;
-    }
-
-    @Override
-    public void updateMonsterPath() {
-        updateFlyingMonsterPath();
     }
 }

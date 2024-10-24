@@ -27,6 +27,7 @@ public abstract class Building extends GameObject {
     public static Image getStaticImageOf(Class<? extends Building> buildingClass) {
         if(instances.get(buildingClass) == null){
             Building building = (Building) instantiate(buildingClass, new CoordsInt(-1, -1));
+            building.isBlueprint = true;
             instances.put(buildingClass, building);
         }
         return instances.get(buildingClass).getImage();

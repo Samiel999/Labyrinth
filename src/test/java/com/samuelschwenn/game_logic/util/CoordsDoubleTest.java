@@ -47,8 +47,8 @@ public class CoordsDoubleTest {
 
     @ParameterizedTest
     @MethodSource
-    void scale_shouldReturnScaledCoordsDouble_givenValidFactor(CoordsDouble given, double factor, CoordsDouble expected) {
-        CoordsDouble actual = given.scale(factor);
+    void multipliedBy_shouldReturnScaledCoordsDouble_givenValidFactor(CoordsDouble given, double factor, CoordsDouble expected) {
+        CoordsDouble actual = given.multipliedBy(factor);
         assertThat(expected).isEqualTo(actual);
     }
 
@@ -120,7 +120,7 @@ public class CoordsDoubleTest {
         );
     }
 
-    private static Stream<Arguments> scale_shouldReturnScaledCoordsDouble_givenValidFactor() {
+    private static Stream<Arguments> multipliedBy_shouldReturnScaledCoordsDouble_givenValidFactor() {
         return Stream.of(
                 Arguments.of(new CoordsDouble(0, 0), 20.0, new CoordsDouble(0, 0)),
                 Arguments.of(new CoordsDouble(1, 1), 15.0, new CoordsDouble(15, 15)),

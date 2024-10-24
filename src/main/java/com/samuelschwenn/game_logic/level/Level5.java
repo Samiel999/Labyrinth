@@ -1,9 +1,9 @@
 package com.samuelschwenn.game_logic.level;
 
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Boss1;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Lakai;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Runner;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.walking.Boss1;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.flying.Lakai;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.walking.Runner;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import org.javatuples.Pair;
 import java.util.ArrayList;

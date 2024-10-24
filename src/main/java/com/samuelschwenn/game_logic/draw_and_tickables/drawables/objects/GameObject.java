@@ -94,7 +94,7 @@ public abstract class GameObject implements Drawable, Serializable {
     public void draw(Graphics g) {
         Drawable.super.draw(g);
         if (this.getDrawnPosition().equals(new CoordsDouble(-1, -1))) return;
-        CoordsDouble pixelPosition = this.getDrawnPosition().scale(spaceBetweenLinesPixels);
+        CoordsDouble pixelPosition = this.getDrawnPosition().multipliedBy(spaceBetweenLinesPixels);
         Graphics2D g2 = (Graphics2D) g;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.getOpacity()));
 
@@ -113,7 +113,7 @@ public abstract class GameObject implements Drawable, Serializable {
             double lifeInPercent = (double) health / maxHealth;
             int width = (int) (lifeInPercent * (spaceBetweenLinesPixels - 4));
             graphics2D.setStroke(new BasicStroke(3));
-            CoordsDouble objektPosition = getDrawnPosition().scale(spaceBetweenLinesPixels);
+            CoordsDouble objektPosition = getDrawnPosition().multipliedBy(spaceBetweenLinesPixels);
             graphics2D.setColor(Color.red);
             graphics2D.drawLine((int) (objektPosition.x()+ 2), (int) (objektPosition.y() + 2 + titleBarSizePixels), (int) (objektPosition.x() + width), (int) (objektPosition.y() + 2 + titleBarSizePixels));
         }

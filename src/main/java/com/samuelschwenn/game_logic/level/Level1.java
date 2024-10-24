@@ -1,7 +1,7 @@
 package com.samuelschwenn.game_logic.level;
 
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.DefaultMonster;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.walking.DefaultMonster;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import org.javatuples.Pair;
 

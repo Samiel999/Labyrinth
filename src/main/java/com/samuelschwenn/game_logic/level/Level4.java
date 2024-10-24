@@ -1,8 +1,8 @@
 package com.samuelschwenn.game_logic.level;
 
 import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.buildings.basis.Basis;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.BombCarrier;
-import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.Lakai;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.flying.BombCarrier;
+import com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.monster.flying.Lakai;
 import com.samuelschwenn.game_logic.util.CoordsInt;
 import org.javatuples.Pair;
 import java.util.ArrayList;
