@@ -12,62 +12,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.samuelschwenn.game_logic.draw_and_tickables.drawables.objects.GameObject.instantiate;
+import static com.samuelschwenn.game_logic.level.DEFAULT_LEVEL.*;
 
 public abstract class Level implements Serializable {
-    //Liste in der die zu spawnenden monster gespeichert sind
     @Getter
-    protected final List<Monster> monstersToSpawn;
-    //getter und setter Methoden
-    //Double wert, der die Wartezeit zwischen dem Spawning von zwei Monstern angibt
+    protected List<Monster> monstersToSpawn;
     @Getter
-    protected final long spawnTime;
+    protected long spawnTime = DEFAULT_SPAWN_TIME;
     @Getter
-    protected final int width;
+    protected int width = DEFAULT_WIDTH;
     @Getter
-    protected final int height;
+    protected int height = DEFAULT_HEIGHT;
     @Getter
-    protected final CoordsInt basisPosition;
-    @Setter
+    protected CoordsInt basisPosition = DEFAULT_BASIS_POSITION;
     @Getter
     protected Basis basis;
-    protected final boolean spawnAtPoint;
+    @Getter
+    protected double startKapital = DEFAULT_START_KAPITAL;
+    @Getter
+    protected int anzahlMauern = DEFAULT_ANZAHL_MAUERN;
+
+    protected boolean spawnAtPoint = true;
     @Getter
     protected CoordsInt spawnPoint;
     @Getter
     protected List<Pair<CoordsInt, CoordsInt>> spawnArea;
-    @Getter
-    protected final double startKapital;
-    @Setter
-    @Getter
-    protected int anzahlMauern;
 
-    public Level(long spawnTime, int width, int height, CoordsInt basisPosition, Basis basis, CoordsInt spawnPoint, double startKapital, int anzahlMauern){
-        this.width = width;
-        this.height = height;
-        this.basisPosition = basisPosition;
+    public Level(Basis basis){
         this.basis = basis;
-        this.spawnPoint = spawnPoint;
-        this.startKapital = startKapital;
-        this.anzahlMauern = anzahlMauern;
         monstersToSpawn = new ArrayList<>();
-        this.spawnTime = spawnTime;
-        spawnAtPoint = true;
-    }
-    public Level(long spawnTime, int width, int height, CoordsInt basisPosition, Basis basis, List<Pair<CoordsInt, CoordsInt>> spawnArea, double startKapital, int anzahlMauern){
-        this.width = width;
-        this.height = height;
-        this.basisPosition = basisPosition;
-        this.basis = basis;
-        this.spawnArea = spawnArea;
-        this.startKapital = startKapital;
-        this.anzahlMauern = anzahlMauern;
-        monstersToSpawn = new ArrayList<>();
-        this.spawnTime = spawnTime;
-        spawnAtPoint = false;
     }
 
     public void addSpawnArea(Pair<CoordsInt, CoordsInt> spawnArea) {
+        if(spawnAtPoint && spawnPoint != null){
+            return;
+        }
+        if(this.spawnArea == null){
+            this.spawnArea = new ArrayList<>();
+        }
         this.spawnArea.add(spawnArea);
+        spawnAtPoint = false;
+    }
+
+    public void addSpawnPoint(CoordsInt spawnPoint) {
+        if(!spawnAtPoint){
+            return;
+        }
+        this.spawnPoint = spawnPoint;
     }
 
     public boolean spawnAtPoint() {
