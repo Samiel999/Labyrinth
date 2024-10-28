@@ -27,7 +27,12 @@ public abstract class Shot implements Drawable, Tickable {
     }
 
     private CoordsInt adaptForPixels(CoordsDouble coords) {
-        return coords.multipliedBy(spaceBetweenLinesPixels).add(new CoordsDouble((double) spaceBetweenLinesPixels / 2, (double) spaceBetweenLinesPixels / 2 + titleBarSizePixels)).toCoordsInt();
+        CoordsDouble coordsInPixels = coords.multipliedBy(spaceBetweenLinesPixels);
+        CoordsDouble fullBlock = new CoordsDouble(spaceBetweenLinesPixels, spaceBetweenLinesPixels);
+        CoordsDouble middleOfBlock = fullBlock.multipliedBy(0.5);
+        CoordsDouble middleOfBlockAdjustedWithTitleBar = middleOfBlock.add(new CoordsDouble(0, titleBarSizePixels));
+        CoordsDouble coordsFullyAdjusted = coordsInPixels.add(middleOfBlockAdjustedWithTitleBar);
+        return coordsFullyAdjusted.toCoordsInt();
     }
 
     @Override
