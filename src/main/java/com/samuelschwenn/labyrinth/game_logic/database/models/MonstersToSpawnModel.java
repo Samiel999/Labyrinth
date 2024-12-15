@@ -17,3 +17,5 @@ public class MonstersToSpawnModel {
     @JoinColumn(name = "monsters_to_spawn_id")
     private List<MonsterModel> monsters;
 }
+
+

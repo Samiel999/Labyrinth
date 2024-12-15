@@ -16,29 +16,21 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.samuelschwenn.labyrinth.LabyrinthApplication.loop;
-import static com.samuelschwenn.labyrinth.game_logic.util.LoopType.main_menu;
 
-
-public class LevelSelectionScreen extends JFrame implements MouseListener {
-    private final int levelWidth = 60, levelHeight = 60;
-    private final int margin = 10;
+public class SaveSelectionScreen extends JFrame implements MouseListener {
+    private final int saveWidth = 60, saveHeight = 60, margin = 10;
     private final int column1 = 10 + margin;
-    private final int row1 = 10 + margin + 28;
-    private final int column2 = column1 + levelWidth + margin;
-    private final int column3 = column2 + levelWidth + margin;
-    private final int column4 = column3 + levelWidth + margin;
-    private final int column5 = column4 + levelWidth + margin;
-    private final Rectangle level1Bounds = new Rectangle(column1, row1, levelWidth, levelHeight);
-    private final Rectangle level2Bounds = new Rectangle(column2, row1, levelWidth, levelHeight);
-    private final Rectangle level3Bounds = new Rectangle(column3, row1, levelWidth, levelHeight);
-    private final Rectangle level4Bounds = new Rectangle(column4, row1, levelWidth, levelHeight);
-    private final Rectangle level5Bounds = new Rectangle(column5, row1, levelWidth, levelHeight);
+    private final int y = 10 + margin + 28;
+    private final int column2 = column1 + saveWidth + margin;
+    private final int column3 = column2 + saveWidth + margin;
+    private final Rectangle save1Bounds = new Rectangle(column1, y, saveWidth, saveHeight);
+    private final Rectangle save2Bounds = new Rectangle(column2, y, saveWidth, saveHeight);
+    private final Rectangle save3Bounds = new Rectangle(column3, y, saveWidth, saveHeight);
     private BufferedImage bufferedImage = null;
-    private final int width = 800;
-    private final int height = 533;
+    private final int width = 800, height = 533;
     private static boolean mainMenuEntered;
 
-    public LevelSelectionScreen() {
+    public SaveSelectionScreen() {
         mainMenuEntered = false;
         addWindowListener(
                 new WindowAdapter() {
@@ -57,7 +49,6 @@ public class LevelSelectionScreen extends JFrame implements MouseListener {
         int systemHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         int leftCornerUpX = systemWidth / 2 - (width / 2);
         int leftCornerUpY = systemHeight / 2 - (height / 2);
-
         setBackground(Color.white);
         setSize(width, height);
         setLocation(
@@ -81,21 +72,14 @@ public class LevelSelectionScreen extends JFrame implements MouseListener {
         Graphics2D g = (Graphics2D) g2;
 
         g.setStroke(new BasicStroke(3));
+        g.drawRect(save1Bounds.x, save1Bounds.y, save1Bounds.width, save1Bounds.height);
+        g.drawString("Level 1", save1Bounds.x + 8, save1Bounds.y + 33);
 
-        g.drawRect(level1Bounds.x, level1Bounds.y, level1Bounds.width, level1Bounds.height);
-        g.drawString("Level 1", level1Bounds.x + 8, level1Bounds.y + 33);
+        g.drawRect(save2Bounds.x, save2Bounds.y, save2Bounds.width, save2Bounds.height);
+        g.drawString("Level 2", save2Bounds.x + 8, save2Bounds.y + 33);
 
-        g.drawRect(level2Bounds.x, level2Bounds.y, level2Bounds.width, level2Bounds.height);
-        g.drawString("Level 2", level2Bounds.x + 8, level2Bounds.y + 33);
-
-        g.drawRect(level3Bounds.x, level3Bounds.y, level3Bounds.width, level3Bounds.height);
-        g.drawString("Level 3", level3Bounds.x + 8, level3Bounds.y + 33);
-
-        g.drawRect(level4Bounds.x, level4Bounds.y, level4Bounds.width, level4Bounds.height);
-        g.drawString("Level 4", level4Bounds.x + 8, level4Bounds.y + 33);
-
-        g.drawRect(level5Bounds.x, level5Bounds.y, level5Bounds.width, level5Bounds.height);
-        g.drawString("Level 5", level5Bounds.x + 8, level5Bounds.y + 33);
+        g.drawRect(save3Bounds.x, save3Bounds.y, save3Bounds.width, save3Bounds.height);
+        g.drawString("Level 3", save3Bounds.x + 8, save3Bounds.y + 33);
 
         addMouseListener(this);
     }
@@ -108,22 +92,18 @@ public class LevelSelectionScreen extends JFrame implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         Map<Rectangle, Integer> bounds = new HashMap<>(Map.of(
-                level1Bounds, 1,
-                level2Bounds, 2,
-                level3Bounds, 3,
-                level4Bounds, 4,
-                level5Bounds, 5
+                save1Bounds, 1,
+                save2Bounds, 2,
+                save3Bounds, 3
         ));
 
-        if (!mainMenuEntered) {
+        if(!mainMenuEntered) {
             mainMenuEntered = true;
-
-            for (Rectangle bound : bounds.keySet()) {
-                if (bound.contains(e.getX(), e.getY())) {
+            for(Rectangle bound : bounds.keySet()) {
+                if(bound.contains(e.getX(), e.getY())) {
                     dispose();
-                    GlobalUsageController.getInstance().setCurrent_level(bounds.get(bound));
-                    loop.update(main_menu);
-                    setVisible(false);
+                    GlobalUsageController.getInstance().setCurrent_save(bounds.get(bound));
+//                    loop.update()
                 }
             }
         }

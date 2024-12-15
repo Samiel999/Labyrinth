@@ -23,6 +23,9 @@ public class GlobalUsageController {
     private List<Tickable> tickables = new CopyOnWriteArrayList<>();
     @Getter
     @Setter
+    private int current_save;
+    @Getter
+    @Setter
     private int current_level = 1;
     @Setter
     @Getter
