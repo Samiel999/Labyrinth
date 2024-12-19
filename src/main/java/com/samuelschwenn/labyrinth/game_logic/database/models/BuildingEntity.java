@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "monster")
-public class MonsterModel {
+@Table(name = "building")
+public class BuildingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "health")
-    private int health;
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "position_x")
     private int position_x;
@@ -20,6 +20,6 @@ public class MonsterModel {
     @Column(name = "position_y")
     private int position_y;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "health")
+    private int health;
 }

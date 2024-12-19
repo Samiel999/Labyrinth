@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "save")
-public class GameFile {
+public class GameFileEntity {
     @Id
     private Long saveId;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "logic_representation_id", referencedColumnName = "id")
-    private LogicRepresentationModel logicRepresentation;
+    private LogicRepresentationEntity logicRepresentation;
 
 }

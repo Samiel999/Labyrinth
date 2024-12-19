@@ -22,7 +22,7 @@ public class StartGamePopUp extends JFrame {
                 new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
                         setVisible(false);
-                        try (FileOutputStream fileOutputStream = new FileOutputStream("GameFile.txt");
+                        try (FileOutputStream fileOutputStream = new FileOutputStream("GameFileEntity.txt");
                              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
                             objectOutputStream.writeObject(LogicRepresentation.getInstance());
                             objectOutputStream.flush();

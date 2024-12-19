@@ -10,7 +10,6 @@ import com.samuelschwenn.labyrinth.game_logic.util.CoordsInt;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -42,25 +41,25 @@ public class CustomizedGameFileRepositoryImpl implements CustomizedGameFileRepos
 
     @Override
     @Transactional
-    public <S extends GameFile> S saveToFileById(long id) {
+    public <S extends GameFileEntity> S saveToFileById(long id) {
         LogicRepresentation logicRepresentation = LogicRepresentation.getInstance();
 
-        List<BuildingModel> buildingModelList = saveBuildingsAndGetModels(logicRepresentation);
+        List<BuildingEntity> buildingEntityList = saveBuildingsAndGetModels(logicRepresentation);
 
-        LevelModel levelModel = saveLevelAndGetModel(logicRepresentation, id);
-        MonsterListModel monsterListModel = saveMonsterListAndGetModel(logicRepresentation, id);
-        MonstersToSpawnModel monstersToSpawn = saveMonstersToSpawnAndGetModel(logicRepresentation, id);
+        LevelEntity levelEntity = saveLevelAndGetModel(logicRepresentation, id);
+        MonsterListEntity monsterListEntity = saveMonsterListAndGetModel(logicRepresentation, id);
+        MonstersToSpawnEntity monstersToSpawn = saveMonstersToSpawnAndGetModel(logicRepresentation, id);
 
-        LogicRepresentationModel logicRepresentationModel = saveLogicRepresentationAndGetModel(buildingModelList, logicRepresentation, monsterListModel, monstersToSpawn, levelModel, id);
+        LogicRepresentationEntity logicRepresentationEntity = saveLogicRepresentationAndGetModel(buildingEntityList, logicRepresentation, monsterListEntity, monstersToSpawn, levelEntity, id);
 
-        GameFile gameFile = saveAndReturnGameFile(logicRepresentationModel, id);
+        GameFileEntity gameFileEntity = saveAndReturnGameFile(logicRepresentationEntity, id);
 
-        return (S) gameFile;
+        return (S) gameFileEntity;
     }
 
     @Override
     public void loadGameFile(long id) {
-        GameFile file = Optional.ofNullable(entityManager.find(GameFile.class, id)).orElseThrow();
+        GameFileEntity file = Optional.ofNullable(entityManager.find(GameFileEntity.class, id)).orElseThrow();
 
         selectLevel(file.getLogicRepresentation().getLevel().getLevel_number());
 
@@ -74,15 +73,15 @@ public class CustomizedGameFileRepositoryImpl implements CustomizedGameFileRepos
         LogicRepresentation.setInstance(logicRepresentation);
     }
 
-    private void loadBuildingList(GameFile file, LogicRepresentation logicRepresentation) {
+    private void loadBuildingList(GameFileEntity file, LogicRepresentation logicRepresentation) {
         List<Building> buildingList = new ArrayList<>();
 
-        for(BuildingModel buildingModel : file.getLogicRepresentation().getBuildings()){
-            CoordsInt position = new CoordsInt(buildingModel.getPosition_x(), buildingModel.getPosition_y());
+        for(BuildingEntity buildingEntity : file.getLogicRepresentation().getBuildings()){
+            CoordsInt position = new CoordsInt(buildingEntity.getPosition_x(), buildingEntity.getPosition_y());
             try {
-                Class<? extends Building> buildingClass = (Class<? extends Building>) Class.forName(buildingModel.getType());
+                Class<? extends Building> buildingClass = (Class<? extends Building>) Class.forName(buildingEntity.getType());
                 Building building = (Building) Building.instantiate(buildingClass, position);
-                building.setHealth(buildingModel.getHealth());
+                building.setHealth(buildingEntity.getHealth());
                 buildingList.add(building);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -97,30 +96,30 @@ public class CustomizedGameFileRepositoryImpl implements CustomizedGameFileRepos
         }
     }
 
-    private void loadMonstersToSpawn(GameFile file, LogicRepresentation logicRepresentation) {
+    private void loadMonstersToSpawn(GameFileEntity file, LogicRepresentation logicRepresentation) {
         List<Monster> monstersToSpawn = new ArrayList<>();
-        for(MonsterModel monsterModel : file.getLogicRepresentation().getMonstersToSpawn().getMonsters()) {
-            monstersToSpawn.add(getMonsterFromModel(monsterModel));
+        for(MonsterEntity monsterEntity : file.getLogicRepresentation().getMonstersToSpawn().getMonsters()) {
+            monstersToSpawn.add(getMonsterFromModel(monsterEntity));
         }
         logicRepresentation.getMonstersToSpawn().clear();
         logicRepresentation.getMonstersToSpawn().addAll(monstersToSpawn);
     }
 
-    private void loadMonsterList(GameFile file, LogicRepresentation logicRepresentation) {
+    private void loadMonsterList(GameFileEntity file, LogicRepresentation logicRepresentation) {
         List<Monster> monsterList = new ArrayList<>();
-        for(MonsterModel monsterModel : file.getLogicRepresentation().getMonsterList().getMonsters()) {
-            monsterList.add(getMonsterFromModel(monsterModel));
+        for(MonsterEntity monsterEntity : file.getLogicRepresentation().getMonsterList().getMonsters()) {
+            monsterList.add(getMonsterFromModel(monsterEntity));
         }
         logicRepresentation.getMonsterList().clear();
         logicRepresentation.getMonsterList().addAll(monsterList);
     }
 
-    private Monster getMonsterFromModel(MonsterModel monsterModel) {
-        CoordsInt position = new CoordsInt(monsterModel.getPosition_x(), monsterModel.getPosition_y());
+    private Monster getMonsterFromModel(MonsterEntity monsterEntity) {
+        CoordsInt position = new CoordsInt(monsterEntity.getPosition_x(), monsterEntity.getPosition_y());
         try {
-            Class<? extends Monster> monsterClass = (Class<? extends Monster>) Class.forName(monsterModel.getType());
+            Class<? extends Monster> monsterClass = (Class<? extends Monster>) Class.forName(monsterEntity.getType());
             Monster monster = (Monster) Monster.instantiate(monsterClass, position);
-            monster.setHealth(monsterModel.getHealth());
+            monster.setHealth(monsterEntity.getHealth());
             monster.updateMonsterPath();
             return monster;
         } catch (ClassNotFoundException e) {
@@ -128,53 +127,53 @@ public class CustomizedGameFileRepositoryImpl implements CustomizedGameFileRepos
         }
     }
 
-    private GameFile saveAndReturnGameFile(LogicRepresentationModel logicRepresentationModel, long id) {
-        GameFile gameFile = new GameFile();
-        gameFile.setLogicRepresentation(logicRepresentationModel);
-        gameFile.setSaveId(id);
-        entityManager.merge(gameFile);
-        return gameFile;
+    private GameFileEntity saveAndReturnGameFile(LogicRepresentationEntity logicRepresentationEntity, long id) {
+        GameFileEntity gameFileEntity = new GameFileEntity();
+        gameFileEntity.setLogicRepresentation(logicRepresentationEntity);
+        gameFileEntity.setSaveId(id);
+        entityManager.merge(gameFileEntity);
+        return gameFileEntity;
     }
 
-    private LogicRepresentationModel saveLogicRepresentationAndGetModel(List<BuildingModel> buildingModelList, LogicRepresentation logicRepresentation, MonsterListModel monsterListModel, MonstersToSpawnModel monstersToSpawn, LevelModel levelModel, long id) {
-        LogicRepresentationModel logicRepresentationModel = new LogicRepresentationModel();
-        logicRepresentationModel.setBuildings(buildingModelList);
-        logicRepresentationModel.setWidth(logicRepresentation.getWidth());
-        logicRepresentationModel.setHeight(logicRepresentation.getHeight());
-        logicRepresentationModel.setMonsterList(monsterListModel);
-        logicRepresentationModel.setMonstersToSpawn(monstersToSpawn);
-        logicRepresentationModel.setLevel(levelModel);
-        logicRepresentationModel.setId(id);
-        logicRepresentationRepository.saveAndFlush(logicRepresentationModel);
-        return logicRepresentationModel;
+    private LogicRepresentationEntity saveLogicRepresentationAndGetModel(List<BuildingEntity> buildingEntityList, LogicRepresentation logicRepresentation, MonsterListEntity monsterListEntity, MonstersToSpawnEntity monstersToSpawn, LevelEntity levelEntity, long id) {
+        LogicRepresentationEntity logicRepresentationEntity = new LogicRepresentationEntity();
+        logicRepresentationEntity.setBuildings(buildingEntityList);
+        logicRepresentationEntity.setWidth(logicRepresentation.getWidth());
+        logicRepresentationEntity.setHeight(logicRepresentation.getHeight());
+        logicRepresentationEntity.setMonsterList(monsterListEntity);
+        logicRepresentationEntity.setMonstersToSpawn(monstersToSpawn);
+        logicRepresentationEntity.setLevel(levelEntity);
+        logicRepresentationEntity.setId(id);
+        logicRepresentationRepository.saveAndFlush(logicRepresentationEntity);
+        return logicRepresentationEntity;
     }
 
-    private MonstersToSpawnModel saveMonstersToSpawnAndGetModel(LogicRepresentation logicRepresentation, long id) {
-        MonstersToSpawnModel monstersToSpawn = new MonstersToSpawnModel();
+    private MonstersToSpawnEntity saveMonstersToSpawnAndGetModel(LogicRepresentation logicRepresentation, long id) {
+        MonstersToSpawnEntity monstersToSpawn = new MonstersToSpawnEntity();
         monstersToSpawn.setMonsters(getMonsterModels(logicRepresentation, false));
         monstersToSpawn.setId(id);
         monstersToSpawnRepository.saveAndFlush(monstersToSpawn);
         return monstersToSpawn;
     }
 
-    private MonsterListModel saveMonsterListAndGetModel(LogicRepresentation logicRepresentation, long id) {
-        MonsterListModel monsterListModel = new MonsterListModel();
-        monsterListModel.setMonsters(getMonsterModels(logicRepresentation, true));
-        monsterListModel.setId(id);
-        monsterListRepository.saveAndFlush(monsterListModel);
-        return monsterListModel;
+    private MonsterListEntity saveMonsterListAndGetModel(LogicRepresentation logicRepresentation, long id) {
+        MonsterListEntity monsterListEntity = new MonsterListEntity();
+        monsterListEntity.setMonsters(getMonsterModels(logicRepresentation, true));
+        monsterListEntity.setId(id);
+        monsterListRepository.saveAndFlush(monsterListEntity);
+        return monsterListEntity;
     }
 
-    private LevelModel saveLevelAndGetModel(LogicRepresentation logicRepresentation, long id) {
-        LevelModel levelModel = new LevelModel();
-        levelModel.setLevel_number(Integer.parseInt(String.valueOf(logicRepresentation.getLevel().getClass().getSimpleName().charAt(5))));
-        levelModel.setId(id);
-        levelRepository.saveAndFlush(levelModel);
-        return levelModel;
+    private LevelEntity saveLevelAndGetModel(LogicRepresentation logicRepresentation, long id) {
+        LevelEntity levelEntity = new LevelEntity();
+        levelEntity.setLevel_number(Integer.parseInt(String.valueOf(logicRepresentation.getLevel().getClass().getSimpleName().charAt(5))));
+        levelEntity.setId(id);
+        levelRepository.saveAndFlush(levelEntity);
+        return levelEntity;
     }
 
-    private List<MonsterModel> getMonsterModels(LogicRepresentation logicRepresentation, boolean list) {
-        List<MonsterModel> monsterModels = new ArrayList<>();
+    private List<MonsterEntity> getMonsterModels(LogicRepresentation logicRepresentation, boolean list) {
+        List<MonsterEntity> monsterEntities = new ArrayList<>();
         List<Monster> monsterList;
         if(list){
             monsterList = logicRepresentation.getMonsterList();
@@ -183,29 +182,29 @@ public class CustomizedGameFileRepositoryImpl implements CustomizedGameFileRepos
         }
 
         for(Monster monster : monsterList){
-            MonsterModel monsterModel = new MonsterModel();
-            monsterModel.setHealth(monster.getHealth());
-            monsterModel.setType(monster.getClass().getName());
-            monsterModel.setPosition_x(monster.getPosition().x());
-            monsterModel.setPosition_y(monster.getPosition().y());
-            monsterModels.add(monsterModel);
-            monsterRepository.saveAndFlush(monsterModel);
+            MonsterEntity monsterEntity = new MonsterEntity();
+            monsterEntity.setHealth(monster.getHealth());
+            monsterEntity.setType(monster.getClass().getName());
+            monsterEntity.setPosition_x(monster.getPosition().x());
+            monsterEntity.setPosition_y(monster.getPosition().y());
+            monsterEntities.add(monsterEntity);
+            monsterRepository.saveAndFlush(monsterEntity);
         }
-        return monsterModels;
+        return monsterEntities;
     }
 
-    private List<BuildingModel> saveBuildingsAndGetModels(LogicRepresentation logicRepresentation) {
-        List<BuildingModel> buildingModelList = new ArrayList<>();
+    private List<BuildingEntity> saveBuildingsAndGetModels(LogicRepresentation logicRepresentation) {
+        List<BuildingEntity> buildingEntityList = new ArrayList<>();
 
         for(Building building : logicRepresentation.getBuildings().values()){
-            BuildingModel buildingModel = new BuildingModel();
-            buildingModel.setHealth(building.getHealth());
-            buildingModel.setType(building.getClass().getName());
-            buildingModel.setPosition_x(building.getPosition().x());
-            buildingModel.setPosition_y(building.getPosition().y());
-            buildingModelList.add(buildingModel);
-            buildingRepository.saveAndFlush(buildingModel);
+            BuildingEntity buildingEntity = new BuildingEntity();
+            buildingEntity.setHealth(building.getHealth());
+            buildingEntity.setType(building.getClass().getName());
+            buildingEntity.setPosition_x(building.getPosition().x());
+            buildingEntity.setPosition_y(building.getPosition().y());
+            buildingEntityList.add(buildingEntity);
+            buildingRepository.saveAndFlush(buildingEntity);
         }
-        return buildingModelList;
+        return buildingEntityList;
     }
 }

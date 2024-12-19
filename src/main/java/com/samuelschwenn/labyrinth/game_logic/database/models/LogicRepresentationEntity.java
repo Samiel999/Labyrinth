@@ -8,13 +8,13 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "logic_representation")
-public class LogicRepresentationModel {
+public class LogicRepresentationEntity {
     @Id
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "logic_representation_id")
-    private List<BuildingModel> buildings;
+    private List<BuildingEntity> buildings;
 
     @Column(name = "width")
     private int width;
@@ -24,13 +24,13 @@ public class LogicRepresentationModel {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "monster_list_id", referencedColumnName = "id")
-    private MonsterListModel monsterList;
+    private MonsterListEntity monsterList;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "monsters_to_spawn_id", referencedColumnName = "id")
-    private MonstersToSpawnModel monstersToSpawn;
+    private MonstersToSpawnEntity monstersToSpawn;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "level_id", referencedColumnName = "id")
-    private LevelModel level;
+    private LevelEntity level;
 }

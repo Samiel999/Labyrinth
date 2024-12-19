@@ -48,7 +48,7 @@ public class SetupMethods {
             @Override
             public void windowClosing(WindowEvent e) {
                 game_frame.setVisible(false);
-                try (FileOutputStream fileOutputStream = new FileOutputStream("GameFile.txt");
+                try (FileOutputStream fileOutputStream = new FileOutputStream("GameFileEntity.txt");
                      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
                     objectOutputStream.writeObject(LogicRepresentation.getInstance());
                     objectOutputStream.flush();

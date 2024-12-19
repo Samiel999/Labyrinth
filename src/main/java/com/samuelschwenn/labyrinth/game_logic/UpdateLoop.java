@@ -51,7 +51,7 @@ public class UpdateLoop implements Runnable {
 
     private void tryToSelectLevelBasedOnSaveFile() {
         try {
-            InputStream stream = MainMenu.class.getClassLoader().getResourceAsStream("GameFile.txt");
+            InputStream stream = MainMenu.class.getClassLoader().getResourceAsStream("GameFileEntity.txt");
             if (stream != null) {
                 processFileData(stream);
             }
@@ -81,7 +81,7 @@ public class UpdateLoop implements Runnable {
         SetupMethods.selectLevel(usageController.getCurrent_level());
         if (continue_game) {
             LogicRepresentation lr;
-            try (InputStream inputStream = UpdateLoop.class.getClassLoader().getResourceAsStream("GameFile.txt");
+            try (InputStream inputStream = UpdateLoop.class.getClassLoader().getResourceAsStream("GameFileEntity.txt");
                  ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
                 lr = (LogicRepresentation) objectInputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
@@ -89,7 +89,7 @@ public class UpdateLoop implements Runnable {
             }
             LogicRepresentation.setInstance(lr);
         } else {
-            File save_file = new File("GameFile.txt");
+            File save_file = new File("GameFileEntity.txt");
             try {
                 if (save_file.createNewFile()) {
                     if (save_file.canWrite()) {
@@ -109,7 +109,7 @@ public class UpdateLoop implements Runnable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            try (PrintWriter printWriter = new PrintWriter("GameFile.txt")) {
+            try (PrintWriter printWriter = new PrintWriter("GameFileEntity.txt")) {
                 printWriter.print("");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
@@ -138,7 +138,7 @@ public class UpdateLoop implements Runnable {
         if (current_level == 4) {
             current_level = 1;
         } else if (LogicRepresentation.getInstance().playerWins()) current_level++;
-        try (PrintWriter printWriter = new PrintWriter("GameFile.txt")) {
+        try (PrintWriter printWriter = new PrintWriter("GameFileEntity.txt")) {
             printWriter.print("Level" + current_level);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

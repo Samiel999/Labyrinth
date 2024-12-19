@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "monster_list")
-public class MonsterListModel {
+public class MonsterListEntity {
     @Id
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "monster_list_id")
-    private List<MonsterModel> monsters;
+    private List<MonsterEntity> monsters;
 }

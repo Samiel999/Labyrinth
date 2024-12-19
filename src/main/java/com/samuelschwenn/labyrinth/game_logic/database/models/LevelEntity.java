@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "level")
-public class LevelModel {
+public class LevelEntity {
     @Id
     private Long id;
 

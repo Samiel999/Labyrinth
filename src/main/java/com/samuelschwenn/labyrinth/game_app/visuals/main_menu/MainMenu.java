@@ -39,7 +39,7 @@ public class MainMenu extends JFrame implements MouseListener {
                 }
         );
         try{
-            InputStream stream = MainMenu.class.getClassLoader().getResourceAsStream("GameFile.txt");
+            InputStream stream = MainMenu.class.getClassLoader().getResourceAsStream("GameFileEntity.txt");
             if(stream != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 char[] input = new char[6];

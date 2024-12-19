@@ -15,32 +15,32 @@ public class InitialLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        GameFile gameFile1 = createGameFile(1);
-        GameFile gameFile2 = createGameFile(2);
-        GameFile gameFile3 = createGameFile(3);
-        gameFileRepository.save(gameFile1);
-        gameFileRepository.save(gameFile2);
-        gameFileRepository.save(gameFile3);
+        GameFileEntity gameFileEntity1 = createGameFile(1);
+        GameFileEntity gameFileEntity2 = createGameFile(2);
+        GameFileEntity gameFileEntity3 = createGameFile(3);
+        gameFileRepository.save(gameFileEntity1);
+        gameFileRepository.save(gameFileEntity2);
+        gameFileRepository.save(gameFileEntity3);
     }
 
-    private GameFile createGameFile(long id) {
-        LevelModel levelModel = new LevelModel();
-        levelModel.setId(id);
-        levelModel.setLevel_number(0);
-        MonsterListModel monsterListModel = new MonsterListModel();
-        monsterListModel.setId(id);
-        MonstersToSpawnModel monstersToSpawnModel = new MonstersToSpawnModel();
-        monstersToSpawnModel.setId(id);
-        LogicRepresentationModel logicRepresentationModel = new LogicRepresentationModel();
-        logicRepresentationModel.setId(id);
-        logicRepresentationModel.setWidth(0);
-        logicRepresentationModel.setHeight(0);
-        logicRepresentationModel.setMonstersToSpawn(monstersToSpawnModel);
-        logicRepresentationModel.setMonsterList(monsterListModel);
-        logicRepresentationModel.setLevel(levelModel);
-        GameFile gameFile = new GameFile();
-        gameFile.setSaveId(id);
-        gameFile.setLogicRepresentation(logicRepresentationModel);
-        return gameFile;
+    private GameFileEntity createGameFile(long id) {
+        LevelEntity levelEntity = new LevelEntity();
+        levelEntity.setId(id);
+        levelEntity.setLevel_number(0);
+        MonsterListEntity monsterListEntity = new MonsterListEntity();
+        monsterListEntity.setId(id);
+        MonstersToSpawnEntity monstersToSpawnEntity = new MonstersToSpawnEntity();
+        monstersToSpawnEntity.setId(id);
+        LogicRepresentationEntity logicRepresentationEntity = new LogicRepresentationEntity();
+        logicRepresentationEntity.setId(id);
+        logicRepresentationEntity.setWidth(0);
+        logicRepresentationEntity.setHeight(0);
+        logicRepresentationEntity.setMonstersToSpawn(monstersToSpawnEntity);
+        logicRepresentationEntity.setMonsterList(monsterListEntity);
+        logicRepresentationEntity.setLevel(levelEntity);
+        GameFileEntity gameFileEntity = new GameFileEntity();
+        gameFileEntity.setSaveId(id);
+        gameFileEntity.setLogicRepresentation(logicRepresentationEntity);
+        return gameFileEntity;
     }
 }
